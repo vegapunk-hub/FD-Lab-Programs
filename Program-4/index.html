@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Product Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4 flex justify-between">
+        <h1 class="text-xl font-bold">Tech Store</h1>
+        <button class="bg-white text-blue-600 px-3 py-1 rounded">Login</button>
+    </nav>
+
+    <!-- Heading -->
+    <h2 class="text-3xl font-bold text-center my-6">Our Products</h2>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <img src="https://picsum.photos/200?1" class="w-full rounded">
+            <h3 class="text-xl font-bold mt-3">Phone</h3>
+            <p class="text-gray-500">₹24,999</p>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded mt-3 hover:bg-blue-700">Buy Now</button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <img src="https://picsum.photos/200?2" class="w-full rounded">
+            <h3 class="text-xl font-bold mt-3">Laptop</h3>
+            <p class="text-gray-500">₹54,999</p>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded mt-3 hover:bg-blue-700">Buy Now</button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-4 text-center">
+            <img src="https://picsum.photos/200?3" class="w-full rounded">
+            <h3 class="text-xl font-bold mt-3">Smart Watch</h3>
+            <p class="text-gray-500">₹5,999</p>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded mt-3 hover:bg-blue-700">Buy Now</button>
+        </div>
+
+    </div>
+
+</body>
+</html>
