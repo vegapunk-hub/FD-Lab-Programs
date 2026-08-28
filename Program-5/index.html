@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registration Form</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<form onsubmit="return validate()">
+
+<h2>Registration Form</h2>
+
+<input type="text" id="name" placeholder="Full Name" required>
+<p id="n" class="error"></p>
+
+<input type="email" id="email" placeholder="Email" required>
+<p id="e" class="error"></p>
+
+<input type="password" id="pass" placeholder="Password" required>
+<p id="p" class="error"></p>
+
+<b>Gender:</b>
+<input type="radio" name="gender"> Male
+<input type="radio" name="gender"> Female
+<p id="g" class="error"></p>
+
+<select id="course" required>
+<option value="">Select Course</option>
+<option>BCA</option>
+<option>BBA</option>
+<option>B.Com</option>
+</select>
+<p id="c" class="error"></p>
+
+<input type="checkbox" id="terms"> I agree to the terms
+<p id="t" class="error"></p>
+
+<button>Register</button>
+
+<div id="success">✓ Registration Successful!</div>
+
+</form>
+
+<script>
+function validate(){
+    let ok=true;
+    document.querySelectorAll(".error").forEach(x=>x.innerHTML="");
+    success.style.display="none";
+
+    if(!/^[A-Za-z ]{3,30}$/.test(name.value))
+        n.innerHTML="Enter 3-30 letters",ok=false;
+
+    if(!email.value.includes("@"))
+        e.innerHTML="Enter valid email",ok=false;
+
+    if(pass.value.length<6)
+        p.innerHTML="Minimum 6 characters",ok=false;
+
+    if(!document.querySelector('input[name="gender"]:checked'))
+        g.innerHTML="Select gender",ok=false;
+
+    if(!course.value)
+        c.innerHTML="Select course",ok=false;
+
+    if(!terms.checked)
+        t.innerHTML="Accept terms",ok=false;
+
+    if(ok) success.style.display="block";
+    return false;
+}
+</script>
+
+</body>
+</html>

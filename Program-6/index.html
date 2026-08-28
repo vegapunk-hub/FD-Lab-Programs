@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Calculator</title>
+	<style>
+		* { box-sizing: border-box; }
+		body {
+			margin: 0;
+			min-height: 100vh;
+			display: grid;
+			place-items: center;
+			font-family: Arial, sans-serif;
+			background: #f1f5f9;
+		}
+		.calculator {
+			width: min(90vw, 320px);
+			padding: 20px;
+			border-radius: 12px;
+			background: #ffffff;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+		}
+		#display {
+			width: 100%;
+			margin-bottom: 15px;
+			padding: 12px;
+			border: 1px solid #cbd5e1;
+			border-radius: 6px;
+			font-size: 1.8rem;
+			text-align: right;
+		}
+		.buttons {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 8px;
+		}
+		button {
+			padding: 16px;
+			border: 0;
+			border-radius: 6px;
+			background: #e2e8f0;
+			font-size: 1.1rem;
+			cursor: pointer;
+		}
+		button:hover { background: #cbd5e1; }
+		.operator, .equals { background: #93c5fd; }
+		.clear { background: #fca5a5; }
+	</style>
+</head>
+<body>
+	<main class="calculator">
+		<input id="display" type="text" value="0" readonly aria-label="Calculator display">
+		<div class="buttons">
+			<button type="button" class="clear" data-action="clear">C</button>
+			<button type="button" data-action="backspace">⌫</button>
+			<button type="button" class="operator" data-value="/">÷</button>
+			<button type="button" class="operator" data-value="*">×</button>
+			<button type="button" data-value="7">7</button>
+			<button type="button" data-value="8">8</button>
+			<button type="button" data-value="9">9</button>
+			<button type="button" class="operator" data-value="-">−</button>
+			<button type="button" data-value="4">4</button>
+			<button type="button" data-value="5">5</button>
+			<button type="button" data-value="6">6</button>
+			<button type="button" class="operator" data-value="+">+</button>
+			<button type="button" data-value="1">1</button>
+			<button type="button" data-value="2">2</button>
+			<button type="button" data-value="3">3</button>
+			<button type="button" class="equals" data-action="calculate">=</button>
+			<button type="button" data-value="0">0</button>
+			<button type="button" data-value=".">.</button>
+		</div>
+	</main>
+
+	<script>
+		const display = document.getElementById('display');
+		let expression = '';
+
+		function addValue(value) {
+			if (display.value === 'Error') expression = '';
+			expression += value;
+			display.value = expression || '0';
+		}
+
+		function calculate() {
+			if (!expression) return;
+			try {
+				if (!/^[0-9+\-*/.() ]+$/.test(expression)) throw new Error();
+				const result = Function(`"use strict"; return (${expression})`)();
+				if (!Number.isFinite(result)) throw new Error('Invalid result');
+				expression = String(result);
+				display.value = expression;
+			} catch {
+				expression = '';
+				display.value = 'Error';
+			}
+		}
+
+		document.querySelector('.buttons').addEventListener('click', (event) => {
+			const button = event.target.closest('button');
+			if (!button) return;
+			if (button.dataset.action === 'clear') {
+				expression = '';
+				display.value = '0';
+			} else if (button.dataset.action === 'backspace') {
+				expression = expression.slice(0, -1);
+				display.value = expression || '0';
+			} else if (button.dataset.action === 'calculate') {
+				calculate();
+			} else {
+				addValue(button.dataset.value);
+			}
+		});
+
+		document.addEventListener('keydown', (event) => {
+			const key = event.key;
+			if (/^[0-9.]$/.test(key) || /^[+\-*/]$/.test(key)) {
+				addValue(key);
+			} else if (key === 'Enter' || key === '=') {
+				event.preventDefault();
+				calculate();
+			} else if (key === 'Escape' || key.toLowerCase() === 'c') {
+				expression = '';
+				display.value = '0';
+			} else if (key === 'Backspace') {
+				expression = expression.slice(0, -1);
+				display.value = expression || '0';
+			}
+		});
+	</script>
+</body>
+</html>
