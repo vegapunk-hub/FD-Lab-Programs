@@ -2,132 +2,131 @@
 <html>
 <head>
   <title>Registration Form</title>
-
   <style>
     body {
       font-family: Arial;
       background: #eee;
     }
-
     form {
       width: 300px;
       margin: 40px auto;
       padding: 20px;
       background: white;
     }
-
     input, select, button {
       width: 100%;
       padding: 8px;
       margin: 5px 0;
       box-sizing: border-box;
     }
-
     input[type="radio"],
     input[type="checkbox"] {
       width: auto;
     }
-
     p {
       color: red;
       font-size: 13px;
+      margin: 2px;
     }
-
     button {
       background: green;
       color: white;
       border: 0;
     }
-
-    #success {
-      color: green;
-    }
   </style>
 </head>
-
 <body>
-
 <form onsubmit="return validate()">
-
   <h2>Registration Form</h2>
-
-  <input id="name" placeholder="Full Name">
+  <input id="name" placeholder="Full Name" required>
   <p id="n"></p>
-
-  <input id="email" placeholder="Email">
+  <input id="email" type="email" placeholder="Email" required>
   <p id="e"></p>
-
-  <input id="pass" type="password" placeholder="Password">
+  <input id="pass" type="password" placeholder="Password" required>
   <p id="p"></p>
-
   Gender:
   <input type="radio" name="gender"> Male
   <input type="radio" name="gender"> Female
   <p id="g"></p>
-
-  <select id="course">
+  <select id="course" required>
     <option value="">Select Course</option>
     <option>BCA</option>
     <option>BBA</option>
     <option>B.Com</option>
   </select>
   <p id="c"></p>
-
-  <input type="checkbox" id="terms"> I agree to terms
+  <input type="checkbox" id="terms" required> I agree to terms
   <p id="t"></p>
-
   <button>Register</button>
-
 </form>
-
 <script>
 function validate() {
-
   let ok = true;
-
   n.innerHTML = "";
   e.innerHTML = "";
   p.innerHTML = "";
   g.innerHTML = "";
   c.innerHTML = "";
   t.innerHTML = "";
-
+  /* NAME */
   if (name.value == "") {
-    n.innerHTML = "Enter name";
+    n.innerHTML = "Name is required";
     ok = false;
   }
-
+  else if (name.value.length < 3) {
+    n.innerHTML = "Name must be at least 3 characters";
+    ok = false;
+  }
+  else if (!/^[A-Za-z ]+$/.test(name.value)) {
+    n.innerHTML = "Name must contain only letters";
+    ok = false;
+  }
+  /* EMAIL */
   if (email.value == "") {
-    e.innerHTML = "Enter email";
+    e.innerHTML = "Email is required";
     ok = false;
   }
-
-  if (pass.value.length < 6) {
-    p.innerHTML = "Minimum 6 characters";
+  else if (!email.value.includes("@")) {
+    e.innerHTML = "Enter a valid email";
     ok = false;
   }
-
+  /* PASSWORD */
+  if (pass.value == "") {
+    p.innerHTML = "Password is required";
+    ok = false;
+  }
+  else if (pass.value.length < 6) {
+    p.innerHTML = "Password must be at least 6 characters";
+    ok = false;
+  }
+  else if (!/[A-Z]/.test(pass.value)) {
+    p.innerHTML = "Password must contain one capital letter";
+    ok = false;
+  }
+  else if (!/[0-9]/.test(pass.value)) {
+    p.innerHTML = "Password must contain one number";
+    ok = false;
+  }
+  /* GENDER */
   if (!document.querySelector('input[name="gender"]:checked')) {
-    g.innerHTML = "Select gender";
+    g.innerHTML = "Please select gender";
     ok = false;
   }
-
+  /* COURSE */
   if (course.value == "") {
-    c.innerHTML = "Select course";
+    c.innerHTML = "Please select a course";
     ok = false;
   }
-
+  /* TERMS */
   if (!terms.checked) {
-    t.innerHTML = "Accept terms";
+    t.innerHTML = "Please accept the terms";
     ok = false;
   }
-
-  if (ok)
-    alert("Registration Successful!");
-
+  if (ok) {
+    alert("✓ Registration Successful!");
+  }
   return false;
 }
 </script>
-
 </body>
 </html>
