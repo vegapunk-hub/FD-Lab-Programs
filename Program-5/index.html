@@ -38,6 +38,7 @@
       background: green;
       color: white;
       border: 0;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -48,30 +49,30 @@
 
   <h2>Registration Form</h2>
 
-  <label for="name">Full Name</label>
-  <input type="text" id="name" placeholder="Enter your name" required>
+  <label>Full Name</label>
+  <input type="text" id="name" placeholder="Enter your name">
   <p id="n"></p>
 
-  <label for="email">Email</label>
-  <input type="email" id="email" placeholder="Enter your email" required>
+  <label>Email</label>
+  <input type="email" id="email" placeholder="Enter your email">
   <p id="e"></p>
 
-  <label for="pass">Password</label>
-  <input type="password" id="pass" placeholder="Enter password" required>
+  <label>Password</label>
+  <input type="password" id="pass" placeholder="Enter password">
   <p id="p"></p>
 
   <label>Gender</label><br>
 
-  <input type="radio" id="male" name="gender" value="Male">
-  <label for="male">Male</label>
+  <input type="radio" name="gender" value="Male">
+  <label>Male</label>
 
-  <input type="radio" id="female" name="gender" value="Female">
-  <label for="female">Female</label>
+  <input type="radio" name="gender" value="Female">
+  <label>Female</label>
 
   <p id="g"></p>
 
-  <label for="course">Course</label>
-  <select id="course" required>
+  <label>Course</label>
+  <select id="course">
     <option value="">Select Course</option>
     <option value="BCA">BCA</option>
     <option value="BBA">BBA</option>
@@ -79,8 +80,8 @@
   </select>
   <p id="c"></p>
 
-  <input type="checkbox" id="terms" required>
-  <label for="terms">I agree to terms</label>
+  <input type="checkbox" id="terms">
+  <label>I agree to terms</label>
   <p id="t"></p>
 
   <button type="submit">Register</button>
@@ -88,83 +89,124 @@
 </form>
 
 <script>
+
 function validate() {
+
+  // Get form elements
+  let name = document.getElementById("name");
+  let email = document.getElementById("email");
+  let pass = document.getElementById("pass");
+  let course = document.getElementById("course");
+  let terms = document.getElementById("terms");
 
   let ok = true;
 
-  n.innerHTML = "";
-  e.innerHTML = "";
-  p.innerHTML = "";
-  g.innerHTML = "";
-  c.innerHTML = "";
-  t.innerHTML = "";
+  // Clear previous messages
+  document.getElementById("n").innerHTML = "";
+  document.getElementById("e").innerHTML = "";
+  document.getElementById("p").innerHTML = "";
+  document.getElementById("g").innerHTML = "";
+  document.getElementById("c").innerHTML = "";
+  document.getElementById("t").innerHTML = "";
 
-  /* NAME */
+
+  // NAME
   if (name.value == "") {
-    n.innerHTML = "Name is required";
+    document.getElementById("n").innerHTML =
+      "Name is required";
     ok = false;
   }
+
   else if (name.value.length < 3) {
-    n.innerHTML = "Name must be at least 3 characters";
+    document.getElementById("n").innerHTML =
+      "Name must be at least 3 characters";
     ok = false;
   }
+
   else if (!/^[A-Za-z ]+$/.test(name.value)) {
-    n.innerHTML = "Name must contain only letters";
+    document.getElementById("n").innerHTML =
+      "Name must contain only letters";
     ok = false;
   }
 
-  /* EMAIL */
+
+  // EMAIL
   if (email.value == "") {
-    e.innerHTML = "Email is required";
+    document.getElementById("e").innerHTML =
+      "Email is required";
     ok = false;
   }
+
   else if (!email.value.includes("@")) {
-    e.innerHTML = "Enter a valid email";
+    document.getElementById("e").innerHTML =
+      "Enter a valid email";
     ok = false;
   }
 
-  /* PASSWORD */
+
+  // PASSWORD
   if (pass.value == "") {
-    p.innerHTML = "Password is required";
+    document.getElementById("p").innerHTML =
+      "Password is required";
     ok = false;
   }
+
   else if (pass.value.length < 6) {
-    p.innerHTML = "Password must be at least 6 characters";
+    document.getElementById("p").innerHTML =
+      "Password must be at least 6 characters";
     ok = false;
   }
+
   else if (!/[A-Z]/.test(pass.value)) {
-    p.innerHTML = "Password must contain one capital letter";
+    document.getElementById("p").innerHTML =
+      "Password must contain one capital letter";
     ok = false;
   }
+
   else if (!/[0-9]/.test(pass.value)) {
-    p.innerHTML = "Password must contain one number";
+    document.getElementById("p").innerHTML =
+      "Password must contain one number";
     ok = false;
   }
 
-  /* GENDER */
-  if (!document.querySelector('input[name="gender"]:checked')) {
-    g.innerHTML = "Please select gender";
+
+  // GENDER
+  if (!document.querySelector(
+      'input[name="gender"]:checked')) {
+
+    document.getElementById("g").innerHTML =
+      "Please select gender";
+
     ok = false;
   }
 
-  /* COURSE */
+
+  // COURSE
   if (course.value == "") {
-    c.innerHTML = "Please select a course";
+    document.getElementById("c").innerHTML =
+      "Please select a course";
+
     ok = false;
   }
 
-  /* TERMS */
+
+  // TERMS
   if (!terms.checked) {
-    t.innerHTML = "Please accept the terms";
+    document.getElementById("t").innerHTML =
+      "Please accept the terms";
+
     ok = false;
   }
 
+
+  // SUCCESS
   if (ok) {
     alert("✓ Registration Successful!");
   }
 
   return false;
 }
+
 </script>
 
 </body>
