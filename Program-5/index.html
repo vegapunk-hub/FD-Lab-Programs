@@ -2,32 +2,38 @@
 <html>
 <head>
   <title>Registration Form</title>
+
   <style>
     body {
       font-family: Arial;
       background: #eee;
     }
+
     form {
       width: 300px;
       margin: 40px auto;
       padding: 20px;
       background: white;
     }
+
     input, select, button {
       width: 100%;
       padding: 8px;
       margin: 5px 0;
       box-sizing: border-box;
     }
+
     input[type="radio"],
     input[type="checkbox"] {
       width: auto;
     }
+
     p {
       color: red;
       font-size: 13px;
       margin: 2px;
     }
+
     button {
       background: green;
       color: white;
@@ -35,39 +41,64 @@
     }
   </style>
 </head>
+
 <body>
+
 <form onsubmit="return validate()">
+
   <h2>Registration Form</h2>
-  <input id="name" placeholder="Full Name" required>
+
+  <label for="name">Full Name</label>
+  <input type="text" id="name" placeholder="Enter your name" required>
   <p id="n"></p>
-  <input id="email" type="email" placeholder="Email" required>
+
+  <label for="email">Email</label>
+  <input type="email" id="email" placeholder="Enter your email" required>
   <p id="e"></p>
-  <input id="pass" type="password" placeholder="Password" required>
+
+  <label for="pass">Password</label>
+  <input type="password" id="pass" placeholder="Enter password" required>
   <p id="p"></p>
-  Gender:
-  <input type="radio" name="gender"> Male
-  <input type="radio" name="gender"> Female
+
+  <label>Gender</label><br>
+
+  <input type="radio" id="male" name="gender" value="Male">
+  <label for="male">Male</label>
+
+  <input type="radio" id="female" name="gender" value="Female">
+  <label for="female">Female</label>
+
   <p id="g"></p>
+
+  <label for="course">Course</label>
   <select id="course" required>
     <option value="">Select Course</option>
-    <option>BCA</option>
-    <option>BBA</option>
-    <option>B.Com</option>
+    <option value="BCA">BCA</option>
+    <option value="BBA">BBA</option>
+    <option value="BCom">B.Com</option>
   </select>
   <p id="c"></p>
-  <input type="checkbox" id="terms" required> I agree to terms
+
+  <input type="checkbox" id="terms" required>
+  <label for="terms">I agree to terms</label>
   <p id="t"></p>
-  <button>Register</button>
+
+  <button type="submit">Register</button>
+
 </form>
+
 <script>
 function validate() {
+
   let ok = true;
+
   n.innerHTML = "";
   e.innerHTML = "";
   p.innerHTML = "";
   g.innerHTML = "";
   c.innerHTML = "";
   t.innerHTML = "";
+
   /* NAME */
   if (name.value == "") {
     n.innerHTML = "Name is required";
@@ -81,6 +112,7 @@ function validate() {
     n.innerHTML = "Name must contain only letters";
     ok = false;
   }
+
   /* EMAIL */
   if (email.value == "") {
     e.innerHTML = "Email is required";
@@ -90,6 +122,7 @@ function validate() {
     e.innerHTML = "Enter a valid email";
     ok = false;
   }
+
   /* PASSWORD */
   if (pass.value == "") {
     p.innerHTML = "Password is required";
@@ -107,26 +140,32 @@ function validate() {
     p.innerHTML = "Password must contain one number";
     ok = false;
   }
+
   /* GENDER */
   if (!document.querySelector('input[name="gender"]:checked')) {
     g.innerHTML = "Please select gender";
     ok = false;
   }
+
   /* COURSE */
   if (course.value == "") {
     c.innerHTML = "Please select a course";
     ok = false;
   }
+
   /* TERMS */
   if (!terms.checked) {
     t.innerHTML = "Please accept the terms";
     ok = false;
   }
+
   if (ok) {
     alert("✓ Registration Successful!");
   }
+
   return false;
 }
 </script>
+
 </body>
 </html>
