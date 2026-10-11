@@ -543,7 +543,7 @@ pre .note{padding:10px 24px;color:#F2C200}
       if (!e.isIntersecting) continue;
       mounter.unobserve(e.target);
       const p = S.programs.find(x => x.id === e.target.dataset.id);
-      if (!p || p.live === false) continue;
+      if (!p) continue;
       const f = document.createElement('iframe');
       f.src = src(p); f.title = 'Live preview of ' + p.title; f.tabIndex = -1;
       f.setAttribute('sandbox', 'allow-scripts'); f.setAttribute('aria-hidden', 'true');
@@ -552,7 +552,7 @@ pre .note{padding:10px 24px;color:#F2C200}
       f.style.transform = `scale(${e.target.clientWidth / 1280})`;
     }
   }, { rootMargin: '300px' });
-  const screen = p => `<div class="screen" data-id="${esc(p.id)}"><div class="ph">${p.live === false ? 'Deploying to the site' : 'Loading preview'}</div></div>`;
+  const screen = p => `<div class="screen" data-id="${esc(p.id)}"><div class="ph">Loading preview</div></div>`;
   const chrome = p => `<span class="chrome"><i></i><i></i><i></i><em>${esc(p.path)}</em></span>`;
   const wire = scope => scope.querySelectorAll('.screen').forEach(s => { scaler.observe(s); mounter.observe(s); });
 
@@ -567,7 +567,7 @@ pre .note{padding:10px 24px;color:#F2C200}
   }
   let stackKey = '';
   function renderStack() {
-    const seen = new Set(), picks = [], rev = S.programs.filter(p => p.live !== false).reverse();
+    const seen = new Set(), picks = [], rev = S.programs.slice().reverse();
     for (const p of rev) { if (!seen.has(p.category)) { seen.add(p.category); picks.push(p); } if (picks.length === 3) break; }
     for (const p of rev) { if (picks.length >= 3) break; if (!picks.includes(p)) picks.push(p); }
     const key = picks.map(p => p.id + p.sig).join();
@@ -687,10 +687,6 @@ pre .note{padding:10px 24px;color:#F2C200}
   }
   function paintFrame() {
     const p = S.current, fr = $('#frame');
-    if (p.live === false) {
-      fr.innerHTML = '<div class="empty" style="margin:40px;border-color:var(--ink2)"><b>Still deploying</b>The latest version is on GitHub but not on this site yet. The preview loads by itself when it is ready.</div>';
-      return;
-    }
     const f = document.createElement('iframe');
     f.title = 'Preview of ' + p.title;
     f.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
