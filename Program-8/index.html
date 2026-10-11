@@ -28,9 +28,10 @@ function loadData() {
 
         students.forEach(student => {
             output += `<tr>
-                <td>${student.id}</td>
                 <td>${student.name}</td>
-                <td>${student.course}</td>
+                <td>${student.class}</td>
+                <td>${student.college}</td>
+                <td>${student.totalMarks}</td>
             </tr>`;
         });
 
