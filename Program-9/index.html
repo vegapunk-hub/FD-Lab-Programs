@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Attendance</title>
+
+    <style>
+        body { font-family: Arial; background: #f4f4f4; }
+        #root { max-width: 400px; margin: 30px auto; }
+        .student { background: white; padding: 10px; margin: 10px 0; border-radius: 8px; }
+        button { padding: 6px 10px; cursor: pointer; }
+    </style>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function Student({ name, regNo }) {
+    const [present, setPresent] = React.useState(false);
+
+    return (
+        <div className="student">
+            <h3>{name}</h3>
+            <p>Register No: {regNo}</p>
+            <p>Attendance: {present ? "Present" : "Absent"}</p>
+            <button onClick={() => setPresent(!present)}>
+                Mark Attendance
+            </button>
+        </div>
+    );
+}
+
+function App() {
+    return (
+        <div>
+            <h2>Student Attendance System</h2>
+            <Student name="Tom Cat" regNo="CN01" />
+            <Student name="Jerry Mouse" regNo="CN02" />
+            <Student name="Spike" regNo="CN03" />
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>

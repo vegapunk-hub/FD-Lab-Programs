@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Dashboard</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+<div id="root"></div>
+<script type="text/babel">
+const products = [
+    { id: 1, name: "Laptop", price: 50000 },
+    { id: 2, name: "Headphones", price: 1500 },
+    { id: 3, name: "Keyboard", price: 800 },
+    { id: 4, name: "Mouse", price: 500 }
+];
+function Navbar({ cart, toggleMenu }) {
+    return (
+        <nav className="bg-blue-600 text-white p-4 flex justify-between">
+            <button onClick={toggleMenu}>☰ Menu</button>
+            <h1 className="font-bold">Mini Shopping Dashboard</h1>
+            <p>🛒 {cart.length}</p>
+        </nav>
+    );
+}
+function Sidebar({ show, setPage }) {
+    if (!show) return null;
+    return (
+        <div className="bg-white p-4 shadow">
+            <button onClick={() => setPage("Home")} className="p-2">Home</button>
+            <button onClick={() => setPage("Products")} className="p-2">Products</button>
+            <button onClick={() => setPage("Cart")} className="p-2">My Cart</button>
+        </div>
+    );
+}
+function ProductCard({ product, addToCart }) {
+    return (
+        <div className="bg-white border rounded p-4">
+            <h2 className="font-bold">{product.name}</h2>
+            <p>Price: ₹{product.price}</p>
+            <button onClick={addToCart}
+                className="bg-blue-600 text-white p-2 mt-2 rounded">
+                Add to Cart
+            </button>
+        </div>
+    );
+}
+function App() {
+    const [cart, setCart] = React.useState([]);
+    const [menu, setMenu] = React.useState(true);
+    const [show, setShow] = React.useState(true);
+    const [page, setPage] = React.useState("Home");
+    return (
+        <div>
+            <Navbar cart={cart} toggleMenu={() => setMenu(!menu)} />
+            <Sidebar show={menu} setPage={setPage} />
+            <main className="p-4">
+                <h2 className="text-xl font-bold mb-3">{page}</h2>
+                {page === "Home" && (
+                    <button onClick={() => setShow(!show)}
+                        className="bg-gray-800 text-white p-2 mb-4 rounded">
+                        {show ? "Hide Products" : "Show Products"}
+                    </button>
+                )}
+                {(page === "Home" || page === "Products") && show && (
+                    <div className="grid grid-cols-2 gap-4">
+                        {products.map(product => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                addToCart={() => setCart([...cart, product])}
+                            />
+                        ))}
+                    </div>
+                )}
+                {page === "Cart" && (
+                    <div className="bg-white p-4 rounded">
+                        {cart.length === 0 ? <p>Cart is empty!</p> :
+                            cart.map((item, index) => (
+                                <p key={index}>{item.name} - ₹{item.price}</p>
+                            ))}
+                        <h3 className="font-bold mt-3">
+                            Total: ₹{cart.reduce((sum, item) => sum + item.price, 0)}
+                        </h3>
+                        <button onClick={() => setCart([])}
+                            className="bg-red-600 text-white p-2 mt-3 rounded">
+                            Clear Cart
+                        </button>
+                    </div>
+                )}
+            </main>
+        </div>
+    );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
