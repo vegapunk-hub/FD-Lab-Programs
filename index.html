@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frontend Design Lab</title>
+<meta name="description" content="Every Frontend Design lab program, running live. Open one, try it, then read the code behind it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1EFFB; --card:#FFFFFF; --ink:#16133A; --ink2:#57537D; --line:#D9D5EE; --wash:#E7E3F7;
+  --focus:#3B36F0;
+  --c-html:#FF7B1C;  --c-html-t:#16133A;
+  --c-css:#FF4FA0;   --c-css-t:#16133A;
+  --c-js:#F2C200;    --c-js-t:#16133A;
+  --c-tailwind:#0FB5A0; --c-tailwind-t:#16133A;
+  --c-react:#3B36F0; --c-react-t:#FFFFFF;
+  --c-other:#B7B4DB; --c-other-t:#16133A;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Hanken Grotesk','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --gutter:clamp(16px,4vw,48px);
+}
+:root[data-theme="dark"]{
+  --paper:#0F0D29; --card:#1A1740; --ink:#EEEBFF; --ink2:#A9A5D2; --line:#332F66; --wash:#242053;
+  --focus:#9A97FF;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F0D29; --card:#1A1740; --ink:#EEEBFF; --ink2:#A9A5D2; --line:#332F66; --wash:#242053;
+    --focus:#9A97FF;
+  }
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.55;
+  background-image:radial-gradient(var(--line) 1px,transparent 1.2px); background-size:26px 26px;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+[hidden]{display:none!important}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1360px;margin-inline:auto;padding-inline:var(--gutter)}
+
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;padding-block:20px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.25rem;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-grid;grid-template-columns:repeat(3,9px);gap:3px}
+.brand i b{width:9px;height:22px;border-radius:3px;display:block}
+.brand i b:nth-child(1){background:var(--c-html)} .brand i b:nth-child(2){background:var(--c-js)} .brand i b:nth-child(3){background:var(--c-react)}
+.bar nav{display:flex;gap:10px;align-items:center}
+.pill{border:1.5px solid var(--ink);background:transparent;border-radius:999px;padding:7px 16px;text-decoration:none;font-weight:600;font-size:.92rem;cursor:pointer;line-height:1.2}
+.pill:hover{background:var(--ink);color:var(--paper)}
+.pill.icon{width:38px;height:38px;padding:0;display:grid;place-items:center}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(24px,5vw,72px);align-items:center;padding-block:clamp(20px,5vw,64px) clamp(36px,5vw,64px)}
+h1{font-family:var(--display);font-weight:800;font-stretch:75%;font-variation-settings:'wdth' 75;font-size:clamp(3.6rem,10.5vw,9.2rem);line-height:.88;letter-spacing:-.045em}
+h1 span{display:block}
+.lede{font-size:clamp(1.05rem,1.6vw,1.25rem);max-width:30em;margin-top:28px;color:var(--ink2)}
+.facts{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:26px;font-size:1rem}
+.facts b{font-family:var(--display);font-size:1.6rem;font-weight:800;letter-spacing:-.02em;margin-right:6px}
+.facts span{display:inline-flex;align-items:baseline}
+
+.stack{position:relative;min-height:clamp(300px,42vw,520px)}
+.stack .win{position:absolute;width:min(78%,440px);box-shadow:0 30px 50px -28px rgba(22,19,58,.55);cursor:pointer;opacity:0;animation:land .8s cubic-bezier(.2,.8,.2,1) forwards}
+.stack .win:nth-child(1){left:0;top:4%;transform:rotate(-4deg);animation-delay:.05s;--r:-4deg}
+.stack .win:nth-child(2){right:0;top:20%;transform:rotate(3deg);z-index:2;animation-delay:.25s;--r:3deg}
+.stack .win:nth-child(3){left:12%;bottom:0;transform:rotate(-1.5deg);z-index:3;animation-delay:.45s;--r:-1.5deg}
+@keyframes land{from{opacity:0;transform:translateY(40px) rotate(0)}to{opacity:1;transform:translateY(0) rotate(var(--r))}}
+.stack .win:hover{z-index:5}
+
+/* browser window (used by hero + cards) */
+.win{background:var(--card);border:2px solid var(--ink);border-radius:12px;overflow:hidden;display:block;text-decoration:none}
+.win .chrome{display:flex;align-items:center;gap:6px;padding:7px 10px;border-bottom:2px solid var(--ink);background:var(--card)}
+.win .chrome i{width:9px;height:9px;border-radius:50%;background:var(--ink);opacity:.9}
+.win .chrome i:nth-child(2){opacity:.5} .win .chrome i:nth-child(3){opacity:.25}
+.win .chrome em{font-style:normal;font-family:var(--mono);font-size:.72rem;margin-left:8px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.screen{position:relative;aspect-ratio:16/10;overflow:hidden;background:#fff}
+.screen iframe{position:absolute;top:0;left:0;width:1280px;height:800px;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
+.screen .ph{position:absolute;inset:0;display:grid;place-items:center;color:#57537D;font-size:.85rem;background:repeating-linear-gradient(135deg,#f4f2fc 0 12px,#ece9f9 12px 24px)}
+
+/* category ribbon */
+.ribbon{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.seg{--bg:var(--c-other);--fg:var(--c-other-t);flex:var(--n,1) 1 auto;min-width:92px;background:var(--bg);color:var(--fg);border:2px solid var(--ink);border-radius:12px;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:14px;font-family:var(--display);font-weight:700;font-size:1.1rem;transition:transform .15s,opacity .2s}
+.seg small{font-family:var(--body);font-weight:600;font-size:.9rem;opacity:.85}
+.seg:hover{transform:translateY(-3px)}
+.seg[aria-pressed="true"]{box-shadow:5px 5px 0 var(--ink);transform:translate(-2px,-2px)}
+.ribbon.has-active .seg[aria-pressed="false"]{opacity:.45}
+.seg.all{--bg:var(--card);--fg:var(--ink);flex:0 0 auto}
+.seg[data-c="HTML"]{--bg:var(--c-html);--fg:var(--c-html-t)}
+.seg[data-c="CSS"]{--bg:var(--c-css);--fg:var(--c-css-t)}
+.seg[data-c="JavaScript"]{--bg:var(--c-js);--fg:var(--c-js-t)}
+.seg[data-c="Tailwind"]{--bg:var(--c-tailwind);--fg:var(--c-tailwind-t)}
+.seg[data-c="React"]{--bg:var(--c-react);--fg:var(--c-react-t)}
+
+/* toolbar */
+.tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px}
+.search{flex:1 1 260px;position:relative}
+.search input{width:100%;padding:12px 16px 12px 44px;border-radius:12px;border:2px solid var(--ink);background:var(--card);font-size:1rem}
+.search svg{position:absolute;left:14px;top:50%;translate:0 -50%;width:20px;height:20px;stroke:var(--ink2)}
+.sel{padding:12px 14px;border-radius:12px;border:2px solid var(--ink);background:var(--card);cursor:pointer}
+.view{display:flex;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--card)}
+.view button{border:0;background:transparent;padding:10px 14px;cursor:pointer;display:grid;place-items:center}
+.view button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.view svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.count{width:100%;color:var(--ink2);font-size:.95rem}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:clamp(18px,2.4vw,32px);padding-bottom:80px}
+.card{--bg:var(--c-other);--fg:var(--c-other-t);display:flex;flex-direction:column;background:var(--card);border:2px solid var(--ink);border-radius:24px;overflow:hidden;text-decoration:none;transition:transform .18s,box-shadow .18s}
+.card[data-c="HTML"]{--bg:var(--c-html);--fg:var(--c-html-t)}
+.card[data-c="CSS"]{--bg:var(--c-css);--fg:var(--c-css-t)}
+.card[data-c="JavaScript"]{--bg:var(--c-js);--fg:var(--c-js-t)}
+.card[data-c="Tailwind"]{--bg:var(--c-tailwind);--fg:var(--c-tailwind-t)}
+.card[data-c="React"]{--bg:var(--c-react);--fg:var(--c-react-t)}
+.card:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink)}
+.mat{background:var(--bg);padding:18px 18px 0;position:relative}
+.mat .win{border-radius:12px 12px 0 0;border-bottom:0}
+.mat .tag{position:absolute;top:26px;right:26px;z-index:2;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:700;font-size:.85rem;font-family:var(--display)}
+.body{padding:18px 22px 22px;display:flex;flex-direction:column;gap:10px;flex:1}
+.head{display:flex;gap:14px;align-items:flex-start}
+.num{font-family:var(--display);font-weight:800;font-size:3rem;line-height:.85;letter-spacing:-.05em;min-width:1.25em;color:var(--ink);-webkit-text-stroke:0}
+.head h3{font-family:var(--display);font-weight:700;font-size:1.32rem;line-height:1.15;letter-spacing:-.015em;padding-top:2px}
+.card p{color:var(--ink2);font-size:.98rem;max-width:44ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.chips span{border:1.5px solid var(--line);border-radius:999px;padding:1px 10px;font-size:.82rem;font-weight:500;background:var(--paper)}
+.foot{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:.9rem;color:var(--ink2)}
+.foot .go{font-weight:700;color:var(--ink);display:inline-flex;gap:6px;align-items:center}
+.foot .go svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;transition:translate .15s}
+.card:hover .go svg{translate:4px 0}
+
+.grid.list{grid-template-columns:1fr;gap:18px}
+.grid.list .card{flex-direction:row}
+.grid.list .mat{width:min(36%,380px);flex:none;display:flex;align-items:flex-end}
+.grid.list .mat .win{width:100%}
+.grid.list .body{justify-content:center}
+@media (max-width:720px){.grid.list .card{flex-direction:column}.grid.list .mat{width:auto}}
+
+.empty{grid-column:1/-1;border:2px dashed var(--ink2);border-radius:24px;padding:48px 24px;text-align:center;color:var(--ink2)}
+.empty b{display:block;font-family:var(--display);font-size:1.5rem;color:var(--ink);margin-bottom:6px}
+.empty button{margin-top:16px}
+
+/* footer */
+footer{border-top:2px solid var(--ink);background:var(--card)}
+footer .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;padding-block:36px}
+footer h2{font-family:var(--display);font-size:1.5rem;letter-spacing:-.02em;margin-bottom:8px}
+footer p{color:var(--ink2);max-width:52ch}
+code,kbd{font-family:var(--mono);font-size:.88em;background:var(--wash);padding:2px 7px;border-radius:6px}
+footer .meta{align-self:end;justify-self:end;text-align:right;font-size:.92rem;color:var(--ink2)}
+@media (max-width:760px){footer .wrap{grid-template-columns:1fr}footer .meta{justify-self:start;text-align:left}}
+
+/* viewer */
+dialog{border:0;padding:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:var(--paper);color:var(--ink)}
+dialog::backdrop{background:rgba(15,13,41,.6)}
+dialog[open]{display:grid;grid-template-rows:auto 1fr}
+.vbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px var(--gutter);border-bottom:2px solid var(--ink);background:var(--card)}
+.vtitle{flex:1 1 220px;min-width:0}
+.vtitle h2{font-family:var(--display);font-size:1.25rem;line-height:1.15;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vtitle small{color:var(--ink2);font-family:var(--mono);font-size:.78rem}
+.seg2{display:flex;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.seg2 button{border:0;background:transparent;padding:7px 14px;cursor:pointer;font-weight:600;display:flex;gap:6px;align-items:center}
+.seg2 button+button{border-left:2px solid var(--ink)}
+.seg2 button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg2 svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.vmain{display:grid;grid-template-columns:minmax(0,1fr) 300px;min-height:0}
+.vmain.noside{grid-template-columns:1fr}
+.stage{min-height:0;overflow:auto;padding:24px;display:flex;justify-content:center;background-image:radial-gradient(var(--line) 1px,transparent 1.2px);background-size:22px 22px}
+.frame{width:100%;max-width:100%;height:100%;min-height:420px;background:#fff;border:2px solid var(--ink);border-radius:14px;overflow:hidden;transition:width .3s cubic-bezier(.2,.8,.2,1);box-shadow:0 30px 50px -30px rgba(22,19,58,.5)}
+.frame iframe{width:100%;height:100%;border:0;background:#fff;display:block}
+.side{border-left:2px solid var(--ink);padding:22px;overflow:auto;background:var(--card)}
+.side h3{font-family:var(--display);font-size:1.05rem;margin:18px 0 6px}
+.side h3:first-child{margin-top:0}
+.side p{font-size:.95rem;color:var(--ink2)}
+.side ul{padding-left:1.1em;font-size:.95rem;color:var(--ink2)}
+.side li{margin:4px 0}
+.side .chips{margin-top:8px}
+.code{min-height:0;display:grid;grid-template-rows:auto 1fr}
+.files{display:flex;gap:6px;flex-wrap:wrap;padding:12px var(--gutter);border-bottom:2px solid var(--ink);background:var(--card);align-items:center}
+.files button{border:2px solid var(--ink);background:transparent;border-radius:10px;padding:4px 12px;font-family:var(--mono);font-size:.85rem;cursor:pointer}
+.files button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.files .copy{margin-left:auto;font-family:var(--body);font-weight:600;background:var(--card)}
+pre{margin:0;overflow:auto;padding:18px 0 40px;background:#16133A;color:#E8E5FF;font-family:var(--mono);font-size:.84rem;line-height:1.65;tab-size:4}
+pre .l{display:grid;grid-template-columns:56px 1fr;padding-right:24px}
+pre .n{text-align:right;padding-right:16px;color:#6f6aa8;user-select:none}
+pre .t{white-space:pre}
+pre .note{padding:10px 24px;color:#F2C200}
+.tb{color:#F2C200}
+@media (max-width:900px){.vmain{grid-template-columns:1fr}.side{display:none}.stage{padding:12px}}
+.toast{position:fixed;left:50%;bottom:24px;translate:-50% 0;background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:12px;font-weight:600;z-index:100}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .stack{min-height:340px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .stack .win{opacity:1;transform:rotate(var(--r))}
+}
+
+/* sync status */
+.sync{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink2)}
+.sync i{width:10px;height:10px;border-radius:50%;background:#1FB36B;flex:none}
+.sync[data-s="busy"] i{background:var(--c-js);animation:pulse 1s infinite}
+.sync[data-s="warn"] i{background:var(--c-html)}
+@keyframes pulse{50%{opacity:.25}}
+@media (max-width:560px){.sync span{display:none}}
+.bar nav{flex-wrap:wrap;justify-content:flex-end}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="#top" aria-label="Frontend Design Lab"><i aria-hidden="true"><b></b><b></b><b></b></i>FD Lab</a>
+    <nav>
+      <span class="sync" id="sync" data-s="busy" role="status"><i></i><span id="syncText">Connecting to GitHub</span></span>
+      <button class="pill" id="refresh">Refresh</button>
+      <a class="pill" id="repoLink" href="#" target="_blank" rel="noopener">GitHub repo</a>
+      <button class="pill icon" id="theme" aria-label="Switch light or dark theme" title="Switch theme">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div>
+      <h1><span>Frontend</span><span>Design</span><span>Lab</span></h1>
+      <p class="lede">Every program from the semester, running live. Open one, try it out, then read the code behind it.</p>
+      <p class="facts" id="facts" aria-live="polite"></p>
+    </div>
+    <div class="stack" id="stack" aria-label="Live previews of lab programs"></div>
+  </section>
+
+  <main id="programs">
+    <div class="ribbon" id="ribbon" role="group" aria-label="Filter by technology"></div>
+
+    <div class="tools">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search by name, topic or tag" aria-label="Search programs" autocomplete="off">
+      </label>
+      <select class="sel" id="sort" aria-label="Sort programs">
+        <option value="order">Program order</option>
+        <option value="code">Most code</option>
+        <option value="az">A to Z</option>
+      </select>
+      <div class="view" role="group" aria-label="Layout">
+        <button id="vGrid" aria-pressed="true" aria-label="Grid view" title="Grid view"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button id="vList" aria-pressed="false" aria-label="List view" title="List view"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg></button>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <h2>Adding a program?</h2>
+      <p>Add a folder with an <code>index.html</code> inside to the GitHub repo. This page reads the repo directly, so the new program appears here within a minute. Nothing else to run or edit.</p>
+    </div>
+    <div class="meta">
+      <div>Department of Computer Applications</div>
+      <div>Frontend Design Lab</div>
+    </div>
+  </div>
+</footer>
+
+<dialog id="viewer" aria-label="Program viewer">
+  <div class="vbar">
+    <button class="pill" id="vClose">Close</button>
+    <div class="vtitle"><h2 id="vTitle"></h2><small id="vPath"></small></div>
+    <div class="seg2" role="group" aria-label="Show">
+      <button id="tPrev" aria-pressed="true">Preview</button>
+      <button id="tCode" aria-pressed="false">Code</button>
+    </div>
+    <div class="seg2" id="devices" role="group" aria-label="Preview size">
+      <button data-w="390" aria-pressed="false" title="Phone"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg>Phone</button>
+      <button data-w="820" aria-pressed="false" title="Tablet"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M11 18h2"/></svg>Tablet</button>
+      <button data-w="100%" aria-pressed="true" title="Desktop"><svg viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>Desktop</button>
+    </div>
+    <div class="seg2">
+      <button id="vPrevP" aria-label="Previous program">Prev</button>
+      <button id="vNextP" aria-label="Next program">Next</button>
+    </div>
+    <a class="pill" id="vOpen" target="_blank" rel="noopener">Open in new tab</a>
+  </div>
+  <div class="vmain" id="vmain">
+    <div class="stage" id="stage"><div class="frame" id="frame"></div></div>
+    <aside class="side" id="side"></aside>
+    <div class="code" id="code" hidden></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  /* ===== Settings ===== */
+  const DEFAULT_REPO = 'vegapunk-hub/FD-Lab-Programs';   // the only thing to change if the repo moves
+  const POLL_MS = 60000;                                  // how often to check GitHub for edits
+
+  const qs = new URLSearchParams(location.search);
+  const ghPage = location.hostname.endsWith('.github.io') && location.pathname.split('/')[1];
+  const REPO = qs.get('repo') || (ghPage ? `${location.hostname.split('.')[0]}/${ghPage}` : DEFAULT_REPO);
+  const API = 'https://api.github.com/repos/' + REPO;
+  const RAW = sha => `https://raw.githubusercontent.com/${REPO}/${sha}/`;
+  const ORDER = ['HTML', 'CSS', 'JavaScript', 'Tailwind', 'React'];
+  const TEXT = /\.(html?|css|jsx?|json|md|txt|svg|ts)$/i;
+  const LANGS = { html: 1, htm: 1, css: 1, js: 1, jsx: 1, json: 1 };
+
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = n => n.toLocaleString('en-IN');
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
+  };
+  const hash = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); };
+
+  const S = {
+    programs: [], commit: null, checkedAt: 0, synced: false, status: 'busy',
+    cat: null, q: '', sort: 'order', view: 'grid',
+    current: null, tab: 'preview', file: 0, viewKey: ''
+  };
+
+  /* ===== Theme ===== */
+  const root = document.documentElement;
+  if (store.get('fd-theme')) root.dataset.theme = store.get('fd-theme');
+  $('#theme').onclick = () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme:dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    store.set('fd-theme', root.dataset.theme);
+  };
+
+  /* ===== Reading the repo ===== */
+  async function gh(path) {
+    const r = await fetch(API + path, { headers: { Accept: 'application/vnd.github+json' } });
+    if (r.status === 403 || r.status === 429) {
+      const e = new Error('limit'); e.limit = true;
+      e.reset = (+r.headers.get('x-ratelimit-reset') || 0) * 1000 || Date.now() + 10 * 60000; throw e;
+    }
+    if (r.status === 404) { const e = new Error('notfound'); e.notfound = true; throw e; }
+    if (!r.ok) throw new Error('http ' + r.status);
+    return r.json();
+  }
+
+  function parseTree(tree) {
+    const dirs = new Map();
+    for (const n of tree) {
+      if (n.type !== 'blob') continue;
+      const i = n.path.indexOf('/');
+      if (i < 1) continue;
+      const dir = n.path.slice(0, i);
+      if (dir.startsWith('.') || dir === 'node_modules') continue;
+      if (!dirs.has(dir)) dirs.set(dir, []);
+      dirs.get(dir).push({ name: n.path.slice(i + 1), path: n.path, size: n.size || 0, sha: n.sha });
+    }
+    const out = [];
+    for (const [dir, files] of dirs) {
+      const entry = files.find(f => f.name === 'index.html');
+      if (!entry) continue;                       // a folder is a program only if it has index.html
+      const m = dir.match(/(\d+)\s*$/);
+      out.push({
+        id: dir, dir, path: dir + '/index.html', num: m ? +m[1] : null,
+        files, entrySha: entry.sha,
+        sig: files.map(f => f.name + f.sha).sort().join('|'),
+        bytes: files.reduce((n, f) => n + f.size, 0)
+      });
+    }
+    return out;
+  }
+
+  /* ===== Working out title, tags and so on from the code ===== */
+  const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/&copy;/g, '©').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  const pick = (h, re) => { const m = h.match(re); return m ? strip(m[1]) : ''; };
+  function analyse(p, texts) {
+    const html = texts['index.html'] || '';
+    const all = Object.entries(texts).filter(([n]) => n !== 'program.json').map(([, t]) => t).join('\n');
+    let over = {};
+    try { over = JSON.parse(texts['program.json'] || '{}'); } catch {}
+    const has = re => re.test(all), tags = [], add = t => tags.includes(t) || tags.push(t);
+    if (has(/<(header|nav|section|article|aside|footer|main)\b/i)) add('Semantic HTML');
+    if (has(/<table/i)) add('Tables');
+    if (has(/<form/i)) add('Forms');
+    if (has(/display\s*:\s*grid|grid-template|\bgrid-cols-/i)) add('CSS Grid');
+    if (has(/display\s*:\s*flex|class="[^"]*\bflex\b/i)) add('Flexbox');
+    if (has(/tailwindcss/i)) add('Tailwind');
+    if (has(/react(\.development|\.production)?(\.min)?\.js|ReactDOM/)) add('React');
+    if (has(/useState/)) add('State');
+    if (has(/\bfetch\s*\(/)) add('Fetch API');
+    if (has(/addEventListener|onclick=|onsubmit=|getElementById|querySelector/)) add('DOM events');
+    if (has(/<script(?![^>]*\bsrc=)[^>]*>\s*\S/i) || p.files.some(f => /\.jsx?$/i.test(f.name))) add('JavaScript');
+    if (has(/@media/)) add('Responsive');
+    if (p.files.some(f => /\.css$/i.test(f.name))) add('External CSS');
+    const category = over.category ||
+      (tags.includes('React') ? 'React' : tags.includes('Tailwind') ? 'Tailwind'
+        : tags.some(t => ['JavaScript', 'Fetch API', 'DOM events'].includes(t)) ? 'JavaScript'
+        : tags.some(t => ['CSS Grid', 'Flexbox', 'External CSS'].includes(t)) ? 'CSS' : 'HTML');
+    const theTags = over.tags || tags;
+    return {
+      title: over.title || pick(html, /<title[^>]*>([\s\S]*?)<\/title>/i) || pick(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || pick(html, /<h2[^>]*>([\s\S]*?)<\/h2>/i) || p.dir.replace(/[-_]+/g, ' '),
+      description: over.description || pick(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) ||
+        (theTags.length ? 'A lab program using ' + theTags.slice(0, 3).join(', ') + '.' : 'A frontend lab program.'),
+      category, tags: theTags, learn: over.learn || [],
+      loc: Object.entries(texts).filter(([n]) => n !== 'program.json').reduce((n, [, t]) => n + t.split('\n').length, 0)
+    };
+  }
+
+  async function hydrate(found, commit) {
+    const prev = new Map(S.programs.map(p => [p.id, p]));
+    await Promise.all(found.map(async p => {
+      const old = prev.get(p.id);
+      if (old && old.sig === p.sig && old.title) { Object.assign(p, pickMeta(old)); return; }
+      const texts = {};
+      await Promise.all(p.files
+        .filter(f => (/\.(html?|css|jsx?)$/i.test(f.name) || f.name === 'program.json') && f.size < 90000)
+        .map(async f => { try { const r = await fetch(RAW(commit) + f.path); if (r.ok) texts[f.name] = await r.text(); } catch {} }));
+      Object.assign(p, analyse(p, texts));
+    }));
+  }
+  const pickMeta = o => ({ title: o.title, description: o.description, category: o.category, tags: o.tags, learn: o.learn, loc: o.loc });
+
+  /* ===== Sync loop ===== */
+  let timer = null, syncing = false, flags = new Map();
+  const byNum = (a, b) => (a.num ?? 1e9) - (b.num ?? 1e9) || a.id.localeCompare(b.id, undefined, { numeric: true });
+
+  async function sync() {
+    if (syncing) return;
+    syncing = true; setStatus('busy', 'Checking GitHub');
+    let delay = POLL_MS;
+    try {
+      const c = await gh('/commits/HEAD');
+      S.checkedAt = Date.now();
+      if (c.sha !== S.commit) {
+        const t = await gh('/git/trees/' + c.commit.tree.sha + '?recursive=1');
+        const found = parseTree(t.tree).sort(byNum);
+        await hydrate(found, c.sha);
+        applyPrograms(found, c.sha);
+      }
+      S.synced = true;
+      setStatus('ok');
+    } catch (e) {
+      if (e.limit) {
+        delay = Math.max(15000, e.reset - Date.now() + 2000);
+        setStatus('warn', 'GitHub limit reached. Retrying at ' + new Date(Date.now() + delay).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      } else if (e.notfound) {
+        setStatus('warn', "Can't read the repo. It needs to be public.");
+        if (!S.programs.length) renderAll();
+      } else {
+        setStatus('warn', navigator.onLine ? 'GitHub did not answer. Retrying soon' : 'Offline. Showing the last saved list');
+        delay = 20000;
+      }
+    } finally {
+      syncing = false;
+      clearTimeout(timer); timer = setTimeout(tick, delay);
+    }
+  }
+  function tick() { document.hidden ? (timer = setTimeout(tick, POLL_MS)) : sync(); }
+
+  function applyPrograms(found, commit) {
+    const prev = new Map(S.programs.map(p => [p.id, p]));
+    const notes = [];
+    if (S.synced) {
+      for (const p of found) {
+        const o = prev.get(p.id);
+        if (!o) { flags.set(p.id, 'New'); notes.push(p.dir + ' added'); }
+        else if (o.sig !== p.sig) { flags.set(p.id, 'Updated'); notes.push(p.dir + ' updated'); }
+      }
+      for (const o of prev.values()) if (!found.some(p => p.id === o.id)) notes.push(o.id + ' removed');
+    }
+    for (const p of found) {
+      const o = prev.get(p.id);
+      if (o && o.sig === p.sig) { p.live = o.live; p.liveSha = o.liveSha; }
+    }
+    S.programs = found; S.commit = commit;
+    store.set('fd-snap', JSON.stringify({ commit, programs: found.map(p => ({ ...p, live: undefined, liveSha: undefined })) }));
+    renderAll(); refreshViewer();
+    if (notes.length) toast(notes.slice(0, 3).join(', '));
+    verify();
+  }
+
+  /* ===== Is the website itself up to date with the repo? ===== */
+  async function isLive(p) {
+    if (location.protocol === 'file:' || !crypto.subtle) return true;
+    try {
+      const r = await fetch(`${p.dir}/index.html`, { cache: 'no-store' });
+      if (!r.ok) return false;
+      const b = new Uint8Array(await r.arrayBuffer());
+      const head = new TextEncoder().encode(`blob ${b.length}\0`);
+      const all = new Uint8Array(head.length + b.length); all.set(head); all.set(b, head.length);
+      const hex = [...new Uint8Array(await crypto.subtle.digest('SHA-1', all))].map(x => x.toString(16).padStart(2, '0')).join('');
+      return hex === p.entrySha;
+    } catch { return true; }
+  }
+  let vTimer = null;
+  async function verify() {
+    clearTimeout(vTimer);
+    let changed = false;
+    await Promise.all(S.programs.map(async p => {
+      if (p.live === true && p.liveSha === p.entrySha) return;
+      p.tries = (p.tries || 0) + 1;
+      const ok = (await isLive(p)) || p.tries > 40;      // after ~10 minutes stop waiting
+      if (ok !== p.live && (ok === false || p.live === false)) changed = true;
+      p.live = ok; p.liveSha = ok ? p.entrySha : null;
+    }));
+    if (changed) { renderAll(); refreshViewer(); }
+    if (S.programs.some(p => !p.live)) vTimer = setTimeout(verify, 15000);
+  }
+
+  /* ===== Status chip ===== */
+  let statusMsg = '';
+  function setStatus(s, msg) { S.status = s; statusMsg = msg || ''; paintStatus(); }
+  function ago(ts) {
+    const s = Math.round((Date.now() - ts) / 1000);
+    return s < 20 ? 'just now' : s < 90 ? s + ' seconds ago' : Math.round(s / 60) + ' minutes ago';
+  }
+  function paintStatus() {
+    $('#sync').dataset.s = S.status;
+    $('#syncText').textContent = statusMsg || (S.checkedAt ? 'In sync with GitHub, checked ' + ago(S.checkedAt) : 'Connecting to GitHub');
+    $('#refresh').disabled = S.status === 'busy';
+  }
+  setInterval(paintStatus, 15000);
+  $('#refresh').onclick = () => sync();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - S.checkedAt > 20000) sync(); });
+  addEventListener('online', () => sync());
+
+  /* ===== Live thumbnails ===== */
+  const src = p => `${p.dir}/index.html?v=${hash(p.sig)}`;
+  const scaler = new ResizeObserver(entries => {
+    for (const e of entries) { const f = e.target.querySelector('iframe'); if (f) f.style.transform = `scale(${e.contentRect.width / 1280})`; }
+  });
+  const mounter = new IntersectionObserver(entries => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      mounter.unobserve(e.target);
+      const p = S.programs.find(x => x.id === e.target.dataset.id);
+      if (!p || p.live === false) continue;
+      const f = document.createElement('iframe');
+      f.src = src(p); f.title = 'Live preview of ' + p.title; f.tabIndex = -1;
+      f.setAttribute('sandbox', 'allow-scripts'); f.setAttribute('aria-hidden', 'true');
+      f.addEventListener('load', () => e.target.querySelector('.ph')?.remove());
+      e.target.append(f);
+      f.style.transform = `scale(${e.target.clientWidth / 1280})`;
+    }
+  }, { rootMargin: '300px' });
+  const screen = p => `<div class="screen" data-id="${esc(p.id)}"><div class="ph">${p.live === false ? 'Deploying to the site' : 'Loading preview'}</div></div>`;
+  const chrome = p => `<span class="chrome"><i></i><i></i><i></i><em>${esc(p.path)}</em></span>`;
+  const wire = scope => scope.querySelectorAll('.screen').forEach(s => { scaler.observe(s); mounter.observe(s); });
+
+  /* ===== Page sections ===== */
+  function renderFacts() {
+    const files = S.programs.reduce((n, p) => n + p.files.length, 0);
+    const loc = S.programs.reduce((n, p) => n + (p.loc || 0), 0);
+    $('#facts').innerHTML =
+      `<span><b>${fmt(S.programs.length)}</b>${S.programs.length === 1 ? 'program' : 'programs'}</span>` +
+      `<span><b>${fmt(files)}</b>${files === 1 ? 'file' : 'files'}</span>` +
+      `<span><b>${fmt(loc)}</b>lines of code</span>`;
+  }
+  let stackKey = '';
+  function renderStack() {
+    const seen = new Set(), picks = [], rev = S.programs.filter(p => p.live !== false).reverse();
+    for (const p of rev) { if (!seen.has(p.category)) { seen.add(p.category); picks.push(p); } if (picks.length === 3) break; }
+    for (const p of rev) { if (picks.length >= 3) break; if (!picks.includes(p)) picks.push(p); }
+    const key = picks.map(p => p.id + p.sig).join();
+    if (key === stackKey) return;                    // keep the entrance animation from replaying
+    stackKey = key;
+    $('#stack').innerHTML = picks.map(p => `<a class="win" href="#${esc(p.id)}" aria-label="Open ${esc(p.title)}">${chrome(p)}${screen(p)}</a>`).join('');
+    wire($('#stack'));
+  }
+  function renderRibbon() {
+    const counts = {};
+    S.programs.forEach(p => counts[p.category] = (counts[p.category] || 0) + 1);
+    if (S.cat && !counts[S.cat]) S.cat = null;
+    const cats = Object.keys(counts).sort((a, b) => {
+      const i = ORDER.indexOf(a), j = ORDER.indexOf(b);
+      return (i < 0 ? 99 : i) - (j < 0 ? 99 : j) || a.localeCompare(b);
+    });
+    const r = $('#ribbon');
+    r.classList.toggle('has-active', !!S.cat);
+    r.innerHTML = `<button class="seg all" aria-pressed="${!S.cat}" data-c="">All<small>${S.programs.length}</small></button>` +
+      cats.map(c => `<button class="seg" data-c="${esc(c)}" style="--n:${counts[c]}" aria-pressed="${S.cat === c}">${esc(c)}<small>${counts[c]}</small></button>`).join('');
+  }
+  $('#ribbon').addEventListener('click', e => {
+    const b = e.target.closest('.seg'); if (!b) return;
+    S.cat = b.dataset.c && S.cat !== b.dataset.c ? b.dataset.c : null;
+    renderRibbon(); renderGrid();
+  });
+
+  function visible() {
+    const q = S.q.trim().toLowerCase();
+    const list = S.programs.filter(p => (!S.cat || p.category === S.cat) &&
+      (!q || [p.title, p.description, p.id, p.category, ...(p.tags || []), ...(p.learn || [])].join(' ').toLowerCase().includes(q)));
+    return list.sort({ order: byNum, code: (a, b) => (b.loc || 0) - (a.loc || 0), az: (a, b) => a.title.localeCompare(b.title) }[S.sort]);
+  }
+  function card(p) {
+    const n = p.num != null ? String(p.num).padStart(2, '0') : '+';
+    const tag = p.live === false ? 'Deploying' : flags.get(p.id);
+    return `<a class="card" data-c="${esc(p.category)}" href="#${esc(p.id)}">
+      <div class="mat">${tag ? `<span class="tag">${tag}</span>` : ''}<span class="win">${chrome(p)}${screen(p)}</span></div>
+      <div class="body">
+        <div class="head"><span class="num" aria-hidden="true">${n}</span><h3>${esc(p.title)}</h3></div>
+        <p>${esc(p.description)}</p>
+        <div class="chips">${(p.tags || []).slice(0, 4).map(t => `<span>${esc(t)}</span>`).join('')}</div>
+        <div class="foot"><span>${p.files.length} ${p.files.length === 1 ? 'file' : 'files'}, ${fmt(p.loc || 0)} lines</span>
+          <span class="go">Open<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+      </div></a>`;
+  }
+  function renderGrid() {
+    const list = visible(), g = $('#grid');
+    g.classList.toggle('list', S.view === 'list');
+    $('#count').textContent = !S.programs.length ? '' : list.length === S.programs.length
+      ? `Showing all ${S.programs.length} programs` : `Showing ${list.length} of ${S.programs.length} programs`;
+    if (!S.programs.length) {
+      g.innerHTML = S.status === 'busy'
+        ? '<div class="empty"><b>Loading programs from GitHub</b>This takes a moment.</div>'
+        : `<div class="empty"><b>No programs to show yet</b>${esc(statusMsg || 'Add a folder with an index.html to the repo.')}<br><button class="pill" id="retry">Try again</button></div>`;
+      $('#retry')?.addEventListener('click', () => sync());
+      return;
+    }
+    g.innerHTML = list.length ? list.map(card).join('') :
+      '<div class="empty"><b>No programs match</b>Try a different word, or clear the filters.<br><button class="pill" id="clear">Clear filters</button></div>';
+    wire(g);
+    $('#clear')?.addEventListener('click', () => { S.cat = null; S.q = ''; $('#q').value = ''; renderRibbon(); renderGrid(); });
+  }
+  function renderAll() { renderFacts(); renderStack(); renderRibbon(); renderGrid(); }
+
+  $('#q').addEventListener('input', e => { S.q = e.target.value; renderGrid(); });
+  $('#sort').addEventListener('change', e => { S.sort = e.target.value; renderGrid(); });
+  const setView = v => {
+    S.view = v; store.set('fd-view', v);
+    $('#vGrid').setAttribute('aria-pressed', v === 'grid'); $('#vList').setAttribute('aria-pressed', v === 'list');
+    renderGrid();
+  };
+  $('#vGrid').onclick = () => setView('grid');
+  $('#vList').onclick = () => setView('list');
+
+  /* ===== Viewer ===== */
+  const dlg = $('#viewer');
+  const fileCache = new Map();
+  async function loadFile(f) {
+    if (!TEXT.test(f.name)) return { note: `${f.name} is not a text file, so there is no code to show.` };
+    if (f.size > 150000) return { note: `${f.name} is large (${fmt(Math.round(f.size / 1024))} KB), so it is not shown here.` };
+    if (!fileCache.has(f.sha)) {
+      const r = await fetch(RAW(S.commit) + f.path);
+      if (!r.ok) throw new Error('load');
+      fileCache.set(f.sha, await r.text());
+    }
+    return { text: fileCache.get(f.sha) };
+  }
+
+  function openProgram(id, push) {
+    const p = S.programs.find(x => x.id === id);
+    if (!p) return;
+    S.current = p; S.file = 0; S.viewKey = p.sig + p.live;
+    $('#vTitle').textContent = p.title; $('#vPath').textContent = p.path; $('#vOpen').href = p.path;
+    paintSide(p);
+    setTab('preview');
+    const o = S.programs, i = o.indexOf(p);
+    $('#vPrevP').disabled = i <= 0; $('#vNextP').disabled = i >= o.length - 1;
+    if (!dlg.open) dlg.showModal();
+    if (push !== false && location.hash !== '#' + id) history.pushState(null, '', '#' + id);
+  }
+  function paintSide(p) {
+    $('#side').innerHTML =
+      `<h3>What it is</h3><p>${esc(p.description)}</p>` +
+      (p.learn && p.learn.length ? `<h3>What you practise</h3><ul>${p.learn.map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : '') +
+      ((p.tags || []).length ? `<h3>Built with</h3><div class="chips">${p.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '') +
+      `<h3>Files</h3><ul>${p.files.map(f => `<li><code>${esc(f.name)}</code></li>`).join('')}</ul>`;
+  }
+  function setTab(t) {
+    S.tab = t;
+    $('#tPrev').setAttribute('aria-pressed', t === 'preview'); $('#tCode').setAttribute('aria-pressed', t === 'code');
+    const prev = t === 'preview';
+    $('#stage').hidden = !prev; $('#side').hidden = !prev; $('#code').hidden = prev;
+    $('#devices').style.display = prev ? '' : 'none';
+    $('#vmain').classList.toggle('noside', !prev);
+    if (prev) paintFrame(); else { $('#frame').replaceChildren(); renderCode(); }
+  }
+  function paintFrame() {
+    const p = S.current, fr = $('#frame');
+    if (p.live === false) {
+      fr.innerHTML = '<div class="empty" style="margin:40px;border-color:var(--ink2)"><b>Still deploying</b>The latest version is on GitHub but not on this site yet. The preview loads by itself when it is ready.</div>';
+      return;
+    }
+    const f = document.createElement('iframe');
+    f.title = 'Preview of ' + p.title;
+    f.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals allow-popups');
+    f.src = src(p);
+    fr.replaceChildren(f);
+  }
+  async function renderCode() {
+    const p = S.current, f = p.files[S.file] || p.files[0], token = ++codeToken;
+    const bar = `<div class="files">${p.files.map((x, i) => `<button data-i="${i}" aria-pressed="${i === S.file}">${esc(x.name)}</button>`).join('')}<button class="copy" disabled>Copy code</button></div>`;
+    $('#code').innerHTML = bar + '<pre tabindex="0"><div class="note">Loading code from GitHub</div></pre>';
+    let res;
+    try { res = await loadFile(f); } catch { res = { note: 'Could not load this file from GitHub. Try Refresh in a moment.' }; }
+    if (token !== codeToken) return;
+    const body = res.text != null
+      ? res.text.split('\n').map((ln, i) => `<div class="l"><span class="n">${i + 1}</span><span class="t">${esc(ln) || ' '}</span></div>`).join('')
+      : `<div class="note">${esc(res.note)}</div>`;
+    $('#code').innerHTML = bar.replace('class="copy" disabled', 'class="copy"' + (res.text == null ? ' disabled' : '')) +
+      `<pre tabindex="0" aria-label="Code of ${esc(f.name)}">${body}</pre>`;
+  }
+  let codeToken = 0;
+  $('#code').addEventListener('click', async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.classList.contains('copy')) {
+      const f = S.current.files[S.file];
+      try { await navigator.clipboard.writeText(fileCache.get(f.sha)); toast('Copied ' + f.name); } catch { toast('Copy did not work. Select the code and copy it by hand.'); }
+    } else if (b.dataset.i != null) { S.file = Number(b.dataset.i); renderCode(); }
+  });
+  // when GitHub or the deploy changes while a program is open, update what is on screen
+  function refreshViewer() {
+    if (!dlg.open || !S.current) return;
+    const p = S.programs.find(x => x.id === S.current.id);
+    if (!p) { dlg.close(); toast(S.current.id + ' was removed'); return; }
+    const key = p.sig + p.live;
+    const changed = key !== S.viewKey;
+    S.current = p; S.viewKey = key;
+    if (!changed) return;
+    $('#vTitle').textContent = p.title; paintSide(p);
+    S.file = Math.min(S.file, p.files.length - 1);
+    S.tab === 'preview' ? paintFrame() : renderCode();
+  }
+  function toast(msg) {
+    const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+    document.body.append(t); setTimeout(() => t.remove(), 2600);
+  }
+  $('#tPrev').onclick = () => setTab('preview');
+  $('#tCode').onclick = () => setTab('code');
+  $('#devices').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('#devices').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    $('#frame').style.width = b.dataset.w === '100%' ? '100%' : b.dataset.w + 'px';
+  });
+  const step = d => { const o = S.programs, i = o.indexOf(S.current) + d; if (o[i]) openProgram(o[i].id); };
+  $('#vPrevP').onclick = () => step(-1);
+  $('#vNextP').onclick = () => step(1);
+  $('#vClose').onclick = () => dlg.close();
+  dlg.addEventListener('close', () => {
+    $('#frame').replaceChildren(); S.current = null;
+    if (location.hash.length > 1) history.pushState(null, '', location.pathname + location.search);
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  function route() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id && S.programs.some(p => p.id === id)) openProgram(id, false);
+    else if (dlg.open) dlg.close();
+  }
+  addEventListener('hashchange', route);
+  addEventListener('popstate', route);
+
+  /* ===== Start ===== */
+  S.view = store.get('fd-view') === 'list' ? 'list' : 'grid';
+  $('#vGrid').setAttribute('aria-pressed', S.view === 'grid'); $('#vList').setAttribute('aria-pressed', S.view === 'list');
+  $('#repoLink').href = 'https://github.com/' + REPO;
+  try {                                           // show the last saved list straight away
+    const snap = JSON.parse(store.get('fd-snap') || 'null');
+    if (snap && snap.programs && snap.programs.length && snap.programs[0].files) { S.programs = snap.programs; S.commit = snap.commit; }
+  } catch {}
+  renderAll(); route();
+  sync().then(() => { route(); verify(); });
+})();
+</script>
+</body>
+</html>
