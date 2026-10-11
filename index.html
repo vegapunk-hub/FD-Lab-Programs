@@ -486,17 +486,18 @@ pre .note{padding:10px 24px;color:#F2C200}
   }
 
   /* ===== Is the website itself up to date with the repo? ===== */
+  // returns 'ok' (same as GitHub), 'stale' (on the site but different) or 'missing' (not on the site)
   async function isLive(p) {
-    if (location.protocol === 'file:' || !crypto.subtle) return true;
+    if (location.protocol === 'file:' || !crypto.subtle) return 'ok';
     try {
       const r = await fetch(`${p.dir}/index.html`, { cache: 'no-store' });
-      if (!r.ok) return false;
+      if (!r.ok) return 'missing';
       const b = new Uint8Array(await r.arrayBuffer());
       const head = new TextEncoder().encode(`blob ${b.length}\0`);
       const all = new Uint8Array(head.length + b.length); all.set(head); all.set(b, head.length);
       const hex = [...new Uint8Array(await crypto.subtle.digest('SHA-1', all))].map(x => x.toString(16).padStart(2, '0')).join('');
-      return hex === p.entrySha;
-    } catch { return true; }
+      return hex === p.entrySha ? 'ok' : 'stale';
+    } catch { return 'ok'; }
   }
   let vTimer = null;
   async function verify() {
@@ -505,7 +506,9 @@ pre .note{padding:10px 24px;color:#F2C200}
     await Promise.all(S.programs.map(async p => {
       if (p.live === true && p.liveSha === p.entrySha) return;
       p.tries = (p.tries || 0) + 1;
-      const ok = (await isLive(p)) || p.tries > 40;      // after ~10 minutes stop waiting
+      const st = await isLive(p);
+      // wait ~90 s for a different copy (a deploy in progress), ~10 min for a missing one, then show it anyway
+      const ok = st === 'ok' || (st === 'stale' && p.tries > 6) || p.tries > 40;
       if (ok !== p.live && (ok === false || p.live === false)) changed = true;
       p.live = ok; p.liveSha = ok ? p.entrySha : null;
     }));
