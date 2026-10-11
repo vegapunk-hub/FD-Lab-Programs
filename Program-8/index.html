@@ -28,18 +28,20 @@
         <tbody id="data"></tbody>
     </table>
 
-    <script>
-        function loadData() {
-            document.getElementById("msg").innerHTML = "Loading...";
-            document.getElementById("data").innerHTML = "";
+  <script>
+    function loadData() {
+        document.getElementById("msg").innerHTML = "Loading...";
+        document.getElementById("data").innerHTML = "";
 
-            fetch("https://raw.githubusercontent.com/vegapunk-hub/json_data/main/raw.json")
+        fetch("https://raw.githubusercontent.com/vegapunk-hub/json_data/main/raw.json")
             .then(response => {
-                if (!response.ok) throw new Error("Failed to load data");
+                if (!response.ok) {
+                    throw new Error("Failed to load data");
+                }
                 return response.json();
             })
-            .then(students => {
-                students.forEach(s => {
+            .then(result => {
+                result.students.forEach(s => {
                     document.getElementById("data").innerHTML += `
                         <tr class="border-b hover:bg-blue-50">
                             <td class="p-3">${s.name}</td>
@@ -49,13 +51,17 @@
                         </tr>`;
                 });
 
-                document.getElementById("msg").innerHTML = "Data loaded successfully!";
+                document.getElementById("msg").innerHTML =
+                    "Data loaded successfully!";
             })
-            .catch(() => {
-                document.getElementById("msg").innerHTML = "Error loading data!";
+            .catch(error => {
+                document.getElementById("msg").innerHTML =
+                    "Error loading data! " + error.message;
+
+                console.error(error);
             });
-        }
-    </script>
+    }
+</script>
 
 </body>
 </html>
