@@ -1,48 +1,61 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+    <title>Student Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-<h2>Student Data</h2>
-<button onclick="loadData()">Load Data</button>
-<p id="msg"></p>
+<body class="bg-gray-100 p-6">
 
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Course</th>
+    <h2 class="text-2xl font-bold text-blue-700 mb-4">
+        Student Dashboard
+    </h2>
+
+    <button onclick="loadData()"
+        class="bg-blue-600 text-white px-4 py-2 rounded">
+        Load Data
+    </button>
+
+    <p id="msg" class="my-4 font-bold"></p>
+
+    <table class="w-full bg-white text-left border">
+        <tr class="bg-blue-200">
+            <th class="p-3">Name</th>
+            <th class="p-3">Class</th>
+            <th class="p-3">College</th>
+            <th class="p-3">Total Marks</th>
         </tr>
-    </thead>
-    <tbody id="data"></tbody>
-</table>
+        <tbody id="data"></tbody>
+    </table>
 
-<script>
-function loadData() {
-    document.getElementById("msg").innerHTML = "Loading...";
+    <script>
+        function loadData() {
+            document.getElementById("msg").innerHTML = "Loading...";
+            document.getElementById("data").innerHTML = "";
 
-    fetch("https://raw.githubusercontent.com/vegapunk-hub/json_data/main/raw.json")
-    .then(response => response.json())
-    .then(students => {
-        let output = "";
+            fetch("https://raw.githubusercontent.com/vegapunk-hub/json_data/main/raw.json")
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to load data");
+                return response.json();
+            })
+            .then(students => {
+                students.forEach(s => {
+                    document.getElementById("data").innerHTML += `
+                        <tr class="border-b hover:bg-blue-50">
+                            <td class="p-3">${s.name}</td>
+                            <td class="p-3">${s.class}</td>
+                            <td class="p-3">${s.college}</td>
+                            <td class="p-3">${s.totalMarks}</td>
+                        </tr>`;
+                });
 
-        students.forEach(student => {
-            output += `<tr>
-                <td>${student.name}</td>
-                <td>${student.class}</td>
-                <td>${student.college}</td>
-                <td>${student.totalMarks}</td>
-            </tr>`;
-        });
-
-        document.getElementById("data").innerHTML = output;
-        document.getElementById("msg").innerHTML = "Data loaded!";
-    })
-    .catch(() => {
-        document.getElementById("msg").innerHTML = "Error loading data!";
-    });
-}
-</script>
+                document.getElementById("msg").innerHTML = "Data loaded successfully!";
+            })
+            .catch(() => {
+                document.getElementById("msg").innerHTML = "Error loading data!";
+            });
+        }
+    </script>
 
 </body>
 </html>
