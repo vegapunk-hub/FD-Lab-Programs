@@ -1,51 +1,91 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
     <title>Simple Calculator</title>
     <style>
-        body { font-family: Arial; text-align: center; margin-top: 50px; }
-        .calculator { width: 250px; margin: auto; }
-        input { width: 95%; padding: 10px; font-size: 20px; text-align: right; }
-        button { width: 55px; padding: 12px; margin: 3px; font-size: 18px; }
+        body {
+            font-family: Arial;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .calculator {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px #ccc;
+            width: 280px;
+        }
+        h2 { text-align: center; }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 15px;
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 12px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            background: #e2e8f0;
+            cursor: pointer;
+        }
+        button:hover { background: #cbd5e1; }
+        .operator { background: #bfdbfe; }
+        .clear { background: #fecaca; }
+        .equals { background: #86efac; }
     </style>
 </head>
 <body>
 
-<h2>Simple Calculator</h2>
-
 <div class="calculator">
-    <input type="text" id="display" value="0" readonly><br><br>
+    <h2>Calculator</h2>
+    <input type="text" id="display" value="0" readonly>
 
-    <button onclick="clearDisplay()">C</button>
-    <button onclick="add('/')">÷</button>
-    <button onclick="add('*')">×</button>
-    <button onclick="add('-')">−</button><br>
+    <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button onclick="backspace()">⌫</button>
+        <button class="operator" onclick="add('/')">÷</button>
+        <button class="operator" onclick="add('*')">×</button>
 
-    <button onclick="add('7')">7</button>
-    <button onclick="add('8')">8</button>
-    <button onclick="add('9')">9</button>
-    <button onclick="add('+')">+</button><br>
+        <button onclick="add('7')">7</button>
+        <button onclick="add('8')">8</button>
+        <button onclick="add('9')">9</button>
+        <button class="operator" onclick="add('-')">−</button>
 
-    <button onclick="add('4')">4</button>
-    <button onclick="add('5')">5</button>
-    <button onclick="add('6')">6</button>
-    <button onclick="calculate()">=</button><br>
+        <button onclick="add('4')">4</button>
+        <button onclick="add('5')">5</button>
+        <button onclick="add('6')">6</button>
+        <button class="operator" onclick="add('+')">+</button>
 
-    <button onclick="add('1')">1</button>
-    <button onclick="add('2')">2</button>
-    <button onclick="add('3')">3</button>
-    <button onclick="add('0')">0</button><br>
+        <button onclick="add('1')">1</button>
+        <button onclick="add('2')">2</button>
+        <button onclick="add('3')">3</button>
+        <button class="equals" onclick="calculate()">=</button>
 
-    <button onclick="add('.')">.</button>
+        <button onclick="add('0')">0</button>
+        <button onclick="add('.')">.</button>
+    </div>
 </div>
 
 <script>
     let expression = "";
+    const display = document.getElementById("display");
 
     function add(value) {
         if (expression === "Error") expression = "";
         expression += value;
-        document.getElementById("display").value = expression;
+        display.value = expression;
     }
 
     function calculate() {
@@ -57,39 +97,34 @@
 
             let result = Function("return " + expression)();
 
-            if (!isFinite(result))
-                throw Error();
+            if (!isFinite(result)) throw Error();
 
             expression = String(result);
-            document.getElementById("display").value = expression;
+            display.value = expression;
         }
         catch {
             expression = "Error";
-            document.getElementById("display").value = "Error";
+            display.value = "Error";
         }
     }
 
     function clearDisplay() {
         expression = "";
-        document.getElementById("display").value = "0";
+        display.value = "0";
+    }
+
+    function backspace() {
+        expression = expression.slice(0, -1);
+        display.value = expression || "0";
     }
 
     document.addEventListener("keydown", function(event) {
         let key = event.key;
 
-        if ("0123456789.+-*/".includes(key) && key !== "") {
-            add(key);
-        }
-        else if (key === "Enter" || key === "=") {
-            calculate();
-        }
-        else if (key === "Escape") {
-            clearDisplay();
-        }
-        else if (key === "Backspace") {
-            expression = expression.slice(0, -1);
-            document.getElementById("display").value = expression || "0";
-        }
+        if (/^[0-9.+\-*/]$/.test(key)) add(key);
+        else if (key === "Enter" || key === "=") calculate();
+        else if (key === "Escape") clearDisplay();
+        else if (key === "Backspace") backspace();
     });
 </script>
 
