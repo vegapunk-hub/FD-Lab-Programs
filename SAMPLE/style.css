@@ -1,0 +1,710 @@
+/* =====================================================================
+   GOOD DESIGN vs BAD DESIGN  -  shared stylesheet
+   ---------------------------------------------------------------------
+   Sections:
+     0. Base (reset, page fade)
+     1. Comparison bar (the header that stays on every page)
+     2. Landing page (index.html)
+     3. Comparison section + principles panel
+     4. GOOD site  (.good-site)
+     5. BAD site   (.bad-site)
+     6. Responsive rules
+
+   NOTE FOR STUDENTS: good.html and bad.html use EXACTLY the same HTML.
+   The only difference is the wrapper class: "good-site" or "bad-site".
+   Everything you see changing is done by CSS alone.
+   ===================================================================== */
+
+
+/* ============================ 0. BASE ============================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;           /* keeps anchors from hiding under the sticky bar */
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+  line-height: 1.6;
+  animation: pageFadeIn 0.45s ease both;   /* subtle fade when a page opens */
+}
+
+/* JavaScript adds this class just before leaving a page */
+body.page-leaving { opacity: 0; transition: opacity 0.25s ease; }
+
+@keyframes pageFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Respect people who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ====================== 1. COMPARISON BAR ======================== */
+.compare-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0b1b3a;
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.compare-bar__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.compare-bar__title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+
+.compare-bar__nav,
+.compare-bar__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* The two big View buttons */
+.view-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.65;
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.view-btn--good { background: #15803d; }
+.view-btn--bad  { background: #b91c1c; }
+.view-btn:hover { opacity: 1; transform: translateY(-1px); }
+
+/* The active button is fully bright with a white ring */
+.view-btn.is-active {
+  opacity: 1;
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+}
+
+/* "Now viewing" indicator */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #1e293b;
+  color: #e2e8f0;
+}
+.status-pill::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+.status-pill--good { background: #dcfce7; color: #14532d; }
+.status-pill--good::before { background: #16a34a; }
+.status-pill--bad  { background: #fee2e2; color: #7f1d1d; }
+.status-pill--bad::before  { background: #dc2626; }
+
+/* Switch Design / Back to Comparison */
+.bar-btn {
+  padding: 8px 14px;
+  border: 1.5px solid #64748b;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.bar-btn:hover { background: #1e3a8a; border-color: #93c5fd; }
+.bar-btn[aria-current] { opacity: 0.45; pointer-events: none; }   /* you are already here */
+
+.compare-bar a:focus-visible,
+.landing a:focus-visible,
+.demo-footer a:focus-visible { outline: 3px solid #60a5fa; outline-offset: 3px; }
+
+
+/* ======================= 2. LANDING PAGE ========================= */
+.landing {
+  text-align: center;
+  padding: 72px 24px 48px;
+  background:
+    radial-gradient(circle at 12% 8%,  rgba(34, 197, 94, 0.16), transparent 42%),
+    radial-gradient(circle at 88% 18%, rgba(239, 68, 68, 0.13), transparent 42%),
+    #f8fafc;
+}
+.landing__inner { max-width: 1100px; margin: 0 auto; }
+
+.project-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: #475569;
+}
+.project-title .vs { color: #2563eb; }
+.project-sub {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin: 24px 0 18px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.landing h1 {
+  max-width: 16em;
+  margin: 0 auto 16px;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #0b1b3a;
+}
+.landing__sub     { margin: 0 0 12px; font-size: 1.25rem; color: #334155; }
+.landing__explain { max-width: 40rem; margin: 0 auto 48px; color: #475569; }
+
+/* The two preview cards */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  text-align: left;
+}
+.choice-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.choice-card:hover { transform: translateY(-6px); box-shadow: 0 20px 45px rgba(15, 23, 42, 0.16); }
+.choice-card--good { border-top: 6px solid #16a34a; }
+.choice-card--bad  { border-top: 6px solid #dc2626; }
+
+.choice-card h2 { margin: 18px 0 6px; font-size: 1.5rem; font-weight: 800; color: #0b1b3a; }
+.choice-card p  { margin: 0 0 22px; color: #475569; }
+
+.badge {
+  align-self: flex-start;
+  margin-top: 20px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.badge--good { background: #dcfce7; color: #14532d; }
+.badge--bad  { background: #fee2e2; color: #7f1d1d; }
+
+.go-btn {
+  display: inline-block;
+  margin-top: auto;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.go-btn:hover { transform: translateY(-2px); }
+.go-btn--good { background: #15803d; }
+.go-btn--good:hover { background: #166534; }
+.go-btn--bad  { background: #b91c1c; }
+.go-btn--bad:hover  { background: #991b1b; }
+
+/* ---- Tiny "mini-mockup" previews drawn with plain CSS ---- */
+.mini {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+}
+
+/* mini GOOD */
+.mini-good { background: #f1f5f9; }
+.mini-good .m-nav {
+  display: flex; justify-content: center; align-items: center; gap: 14px;
+  height: 26px; background: #0b1b3a;
+}
+.mini-good .m-nav i { width: 34px; height: 5px; border-radius: 3px; background: #94a3b8; }
+.mini-good .m-hero { padding: 20px 0 22px; background: #0b1b3a; text-align: center; }
+.mini-good .l1 { display: block; width: 52%; height: 10px; margin: 0 auto 8px; border-radius: 5px; background: #fff; }
+.mini-good .l2 { display: block; width: 36%; height: 6px;  margin: 0 auto;     border-radius: 3px; background: #94a3b8; }
+.mini-good .m-btn { display: block; width: 64px; height: 16px; margin: 12px auto 0; border-radius: 8px; background: #2563eb; }
+.mini-good .m-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px; }
+.mini-good .m-cards div { height: 58px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
+
+/* mini BAD: shapes placed anywhere on purpose */
+.mini-bad { background: #ffe600; }
+.mini-bad .b { position: absolute; display: block; }
+.b1 { top: 0; left: 0; width: 100%; height: 14px;
+      background: repeating-linear-gradient(90deg, #ff1744 0 20px, #39ff14 20px 36px, #6a00ff 36px 70px); }
+.b2 { top: 22px; left: 6%;   width: 58%; height: 66px; background: #ff1744; border: 4px dashed #39ff14; }
+.b3 { top: 30px; right: 4%;  width: 24%; height: 8px;  background: #6a00ff; }
+.b4 { top: 46px; right: 10%; width: 30%; height: 6px;  background: #9c27b0; }
+.b5 { top: 100px; left: 2%;  width: 36%; height: 54px; background: #9c27b0; border: 3px ridge #ffe600; transform: rotate(-2deg); }
+.b6 { top: 118px; left: 44%; width: 18%; height: 84px; background: #00e5ff; border: 2px solid #ff1744; }
+.b7 { top: 98px; right: 3%;  width: 30%; height: 40px; background: #39ff14; border: 4px double #6a00ff; }
+.b8 { bottom: 6px; left: 8%; width: 70%; height: 12px; background: #ff4081; box-shadow: 4px 4px 0 #000; }
+
+
+/* =============== 3. COMPARISON SECTION + PRINCIPLES =============== */
+.compare-section { max-width: 1100px; margin: 0 auto; padding: 56px 24px; }
+
+.section-head { max-width: 42rem; margin: 0 auto 36px; text-align: center; }
+.section-head h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #0b1b3a;
+}
+.section-head p { margin: 0; color: #475569; }
+
+.compare-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+.compare-item {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+.compare-item h3 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 800; color: #0b1b3a; }
+.compare-item .row {
+  margin: 0 0 10px;
+  padding: 2px 0 2px 12px;
+  border-left: 4px solid;
+  font-size: 0.92rem;
+  color: #334155;
+}
+.compare-item .row strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.row--good   { border-color: #16a34a; }
+.row--good strong { color: #15803d; }
+.row--bad    { border-color: #dc2626; }
+.row--bad strong  { color: #b91c1c; }
+.row--effect { margin-bottom: 0 !important; padding: 8px 12px !important; border-color: #2563eb; border-radius: 0 8px 8px 0; background: #eff6ff; }
+.row--effect strong { color: #1d4ed8; }
+
+/* Principles panel (used on index.html AND under good.html / bad.html) */
+.principles { max-width: 1100px; margin: 0 auto; padding: 40px 24px 56px; }
+.principles__box {
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+.principles__box h2 { margin: 0 0 6px; font-size: 1.5rem; font-weight: 800; color: #0b1b3a; }
+.principles__box > p { margin: 0 0 20px; color: #475569; }
+.principles__box--bad { border-top: 6px solid #dc2626; }
+.principles__box--good { border-top: 6px solid #16a34a; }
+
+.principles ol {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: item;
+}
+.principles li {
+  position: relative;
+  padding-left: 42px;
+  font-size: 0.95rem;
+  color: #334155;
+  counter-increment: item;
+}
+.principles li::before {
+  content: counter(item);
+  position: absolute;
+  left: 0; top: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #0b1b3a;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 28px;
+  text-align: center;
+}
+.principles li strong { color: #0b1b3a; }
+
+.quote {
+  max-width: 900px;
+  margin: 0 auto 64px;
+  padding: 40px 32px;
+  border-radius: 24px;
+  background: #0b1b3a;
+  color: #fff;
+  font-size: clamp(1.15rem, 3vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: center;
+}
+.quote-wrap { padding: 0 24px; }
+.quote .go-btn { margin: 24px 6px 0; }
+
+.demo-footer { padding: 24px; background: #0b1b3a; color: #94a3b8; font-size: 0.85rem; text-align: center; }
+.demo-footer p { margin: 0; }
+
+
+/* =====================================================================
+   4. GOOD SITE  (.good-site)
+   Rules applied: one font, 3-colour palette, clear hierarchy, equal
+   spacing, grid for cards, high contrast, consistent buttons.
+   Palette:  navy #0b1b3a   white #ffffff   blue accent #2563eb
+   ===================================================================== */
+.good-site {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #fff;
+  color: #0f172a;
+  line-height: 1.7;
+}
+.good-site .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Navigation */
+.good-site .site-header { background: #0b1b3a; border-top: 1px solid #1e293b; }
+.good-site .site-nav ul {
+  display: flex; justify-content: center; gap: 8px;
+  margin: 0; padding: 14px 24px; list-style: none;
+}
+.good-site .site-nav a {
+  display: block; padding: 8px 18px; border-radius: 8px;
+  font-size: 0.95rem; font-weight: 500; color: #e2e8f0; text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.good-site .site-nav a:hover { background: #1e3a8a; color: #fff; }
+
+/* Every section gets the same vertical spacing */
+.good-site section { padding: 88px 0; }
+
+/* Hero */
+.good-site .hero { background: #0b1b3a; color: #fff; text-align: center; }
+.good-site .hero h1 {
+  max-width: 14em; margin: 0 auto 20px;
+  font-size: clamp(2.2rem, 5.5vw, 3.75rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.02em;
+}
+.good-site .hero p {
+  max-width: 38rem; margin: 0 auto 36px;
+  font-size: 1.15rem; color: #cbd5e1;
+}
+
+/* One button style, used everywhere */
+.good-site .btn {
+  display: inline-block; padding: 14px 28px; border-radius: 10px;
+  background: #2563eb; color: #fff;
+  font-size: 1rem; font-weight: 600; text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.good-site .btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+.good-site .btn:focus-visible,
+.good-site .site-nav a:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+
+/* Headings */
+.good-site h2 { margin: 0 0 16px; font-size: 2.1rem; font-weight: 700; line-height: 1.2; color: #0b1b3a; letter-spacing: -0.01em; }
+.good-site h3 { margin: 0 0 10px; font-size: 1.25rem; font-weight: 600; color: #0b1b3a; }
+
+/* About */
+.good-site .about { text-align: center; }
+.good-site .about p { max-width: 44rem; margin: 0 auto; font-size: 1.1rem; color: #334155; }
+
+/* Courses: CSS Grid gives three equal cards */
+.good-site .courses { background: #f1f5f9; text-align: center; }
+.good-site .courses h2 { margin-bottom: 40px; }
+.good-site .course-grid { display: grid; grid-template-columns: 1fr; gap: 24px; text-align: left; }
+.good-site .course-card {
+  padding: 32px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #2563eb;
+  border-radius: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.good-site .course-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1); }
+.good-site .course-card p { margin: 0; color: #475569; }
+
+/* Contact */
+.good-site .contact { text-align: center; }
+.good-site .contact p { max-width: 36rem; margin: 0 auto 28px; font-size: 1.1rem; color: #334155; }
+
+/* Footer */
+.good-site .site-footer { padding: 28px 24px; background: #0b1b3a; text-align: center; }
+.good-site .site-footer p { margin: 0; font-size: 0.9rem; color: #cbd5e1; }
+
+
+/* =====================================================================
+   5. BAD SITE  (.bad-site)
+   DELIBERATELY BAD (for teaching): many fonts, clashing colours, random
+   sizes, uneven spacing, misalignment, inconsistent buttons, low
+   contrast, crowded sections, awkward wrapping, random capitalisation.
+   No flashing, no hidden text: everything is still readable.
+   ===================================================================== */
+.bad-site {
+  font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive;   /* font #1 */
+  background: #ffe600;
+  color: #5b00c9;
+  line-height: 1.1;
+  overflow-x: hidden;
+}
+.bad-site .container { max-width: none; margin: 0; padding: 0; }
+
+/* ---- Navigation: four links, four different styles ---- */
+.bad-site .site-header {
+  padding: 3px 0 14px;
+  background: #00e5ff;
+  border-bottom: 8px double #ff1744;
+}
+.bad-site .site-nav ul {
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  margin: 0; padding: 0 0 0 5%; list-style: none;
+}
+.bad-site .site-nav a { text-decoration: none; display: inline-block; }
+
+.bad-site .site-nav li:nth-child(1) { margin-right: 12px; }
+.bad-site .site-nav li:nth-child(1) a {
+  font: 400 34px Impact, "Arial Narrow Bold", sans-serif;                      /* font #2 */
+  text-transform: uppercase; color: #ff1744; background: #ffee00;
+  border: 4px solid #6a00ff; padding: 2px 6px;
+}
+.bad-site .site-nav li:nth-child(2) { margin: 0 70px 0 10px; }
+.bad-site .site-nav li:nth-child(2) a {
+  font: 400 11px "Times New Roman", Times, serif;                              /* font #3 */
+  text-transform: lowercase; color: #3d8fa6; text-decoration: underline wavy #ff1744;
+}
+.bad-site .site-nav li:nth-child(3) { margin-bottom: -4px; }
+.bad-site .site-nav li:nth-child(3) a {
+  font: 700 20px "Courier New", Courier, monospace;                            /* font #4 */
+  background: #39ff14; color: #d6007a; padding: 12px 30px; border-radius: 40px;
+  text-transform: capitalize;
+}
+.bad-site .site-nav li:nth-child(4) { margin-left: 25px; }
+.bad-site .site-nav li:nth-child(4) a {
+  font: italic 400 15px Georgia, serif;                                        /* font #5 */
+  text-transform: uppercase; letter-spacing: 6px;
+  background: #6a00ff; color: #ffe600; border: 3px dashed #39ff14; padding: 5px 9px;
+  transform: rotate(-3deg);
+}
+
+/* ---- Hero: huge heading, tiny paragraph, oversized button ---- */
+.bad-site section { padding: 0; }
+
+.bad-site .hero {
+  padding: 10px 0 4px 11% !important;
+  background: #ff1744;
+  border-left: 30px solid #39ff14;
+  border-bottom: 12px dotted #6a00ff;
+}
+.bad-site .hero h1 {
+  max-width: 5.5em;                          /* forces awkward wrapping */
+  margin: 0 0 6px -10px;
+  font: 400 clamp(2.6rem, 9vw, 5.5rem) Impact, "Arial Narrow Bold", sans-serif;
+  line-height: 0.9; letter-spacing: -2px; text-transform: uppercase;
+  color: #39ff14;
+  text-shadow: 4px 4px 0 #6a00ff, -2px -2px 0 #ffe600;
+}
+.bad-site .hero p {
+  width: 38%; margin: 0 0 0 40%;
+  font: 400 11px "Times New Roman", Times, serif;
+  letter-spacing: 3px; text-align: justify; text-transform: uppercase;
+  color: #ff9aae;
+}
+.bad-site .hero .btn {
+  display: inline-block;
+  margin: 30px 0 20px 3%;
+  padding: 30px 70px;
+  font: 900 28px "Brush Script MT", "Lucida Handwriting", cursive;
+  color: #008a45; background: #ffe600;
+  border: 6px outset #6a00ff; border-radius: 0 40px 0 40px;
+  box-shadow: 12px 12px 0 #000;
+  text-decoration: none;
+}
+
+/* ---- About: tiny heading, giant right-aligned paragraph ---- */
+.bad-site .about {
+  margin: 0 0 0 -8px;
+  padding: 6px 3px !important;
+  background: #39ff14;
+  border-top: 5px dashed #ff1744;
+}
+.bad-site .about h2 {
+  margin: 0 0 0 70%;
+  font: 700 13px "Courier New", Courier, monospace;
+  text-transform: lowercase; text-decoration: underline overline; color: #6a00ff;
+}
+.bad-site .about p {
+  width: 90%; margin: 4px 0 6px 6%;
+  font: italic 400 34px Georgia, serif;
+  line-height: 0.95; letter-spacing: -1px; text-align: right;
+  color: #b388ff;
+}
+
+/* ---- Courses: crowded, different sizes, uneven alignment ---- */
+.bad-site .courses {
+  margin: -2px 40px 0 0;
+  padding: 30px 4px 6px 18px !important;
+  background: #9c27b0;
+  border: 10px ridge #ffe600;
+}
+.bad-site .courses h2 {
+  width: 60%; margin: 0 0 12px 25%;
+  font: 900 clamp(2rem, 7vw, 4rem) Papyrus, Impact, fantasy;
+  line-height: 0.9; text-transform: uppercase; text-align: left;
+  color: #ffe600;
+  text-shadow: 3px 3px 0 #ff1744;
+  text-decoration: underline wavy #39ff14;
+}
+.bad-site .course-grid { display: flex; flex-wrap: wrap; align-items: flex-start; }
+.bad-site .course-card { margin: 4px; }
+
+.bad-site .course-card:nth-child(1) {
+  width: 46%; padding: 3px 10px 14px;
+  background: #ff1744; color: #ffd6dd;
+  border: 8px dashed #39ff14;
+  box-shadow: 10px 10px 0 #000;
+  font-family: "Courier New", Courier, monospace;
+  transform: rotate(1deg);
+}
+.bad-site .course-card:nth-child(1) h3 { margin: 0 0 4px; font: 400 36px Impact, sans-serif; text-transform: lowercase; color: #ffe600; }
+.bad-site .course-card:nth-child(1) p  { margin: 0; font-size: 12px; }
+
+.bad-site .course-card:nth-child(2) {
+  width: 22%; margin-top: 70px; padding: 22px 10px;
+  background: #00e5ff; color: #6fcbd6;
+  border: 2px solid #ff1744; border-radius: 50px;
+  font-family: Georgia, serif; font-style: italic;
+}
+.bad-site .course-card:nth-child(2) h3 { margin: 0 0 6px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: #9c27b0; }
+.bad-site .course-card:nth-child(2) p  { margin: 0; font-size: 20px; }
+
+.bad-site .course-card:nth-child(3) {
+  width: 58%; margin-left: 22%; padding: 40px 6px 2px;
+  background: #ffe600; color: #b39b00;
+  border: 5px groove #6a00ff;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+.bad-site .course-card:nth-child(3) h3 { margin: 0 0 2px; font-size: 28px; text-transform: uppercase; color: #ff1744; }
+.bad-site .course-card:nth-child(3) p  { margin: 0; font-size: 10px; text-transform: uppercase; }
+
+/* ---- Contact: shouty colours, tiny awkward button ---- */
+.bad-site .contact {
+  margin: 30px 0 0 12%;
+  padding: 0 0 10px !important;
+  background: #ffe600;
+  border: 3px solid #ff1744;
+  border-right: 30px solid #6a00ff;
+}
+.bad-site .contact h2 {
+  margin: 0 0 0 -4%;
+  font: 400 46px "Brush Script MT", "Lucida Handwriting", cursive;
+  text-transform: lowercase; color: #ff1744;
+}
+.bad-site .contact p {
+  width: 30%; margin: 0 0 8px;
+  font: 400 11px "Arial Black", Gadget, sans-serif;
+  letter-spacing: 1px; text-align: right; text-transform: uppercase;
+  color: #b39b00;
+}
+.bad-site .contact .btn {
+  display: inline-block; margin-left: 80%;
+  padding: 6px 10px 10px;
+  font: 700 12px "Courier New", Courier, monospace;
+  color: #ffe600; background: #2962ff;
+  border: 1px solid #000; border-radius: 0;
+  text-decoration: none;
+}
+
+/* ---- Footer ---- */
+.bad-site .site-footer {
+  margin-top: 60px; padding: 2px 10px 2px 0;
+  background: #00e676; text-align: right;
+}
+.bad-site .site-footer p {
+  margin: 0;
+  font: italic 400 10px "Times New Roman", Times, serif;
+  text-transform: uppercase; color: #ff5ac8;
+}
+
+
+/* ======================= 6. RESPONSIVE RULES ===================== */
+
+/* Tablet and up */
+@media (min-width: 700px) {
+  .compare-grid { grid-template-columns: repeat(2, 1fr); }
+  .principles ol { grid-template-columns: repeat(2, 1fr); }
+  .cards { grid-template-columns: 1fr 1fr; }
+  .good-site .course-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Large screens */
+@media (min-width: 1000px) {
+  .compare-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Phones */
+@media (max-width: 760px) {
+  html { scroll-padding-top: 0; }
+  .compare-bar { position: static; }            /* a 3-row bar would use too much screen */
+  .compare-bar__inner { justify-content: center; text-align: center; }
+  .landing { padding-top: 48px; }
+  .good-site section { padding: 64px 0; }
+  .good-site .site-nav ul { flex-wrap: wrap; padding: 10px 12px; }
+  .good-site .site-nav a { padding: 8px 12px; }
+
+  /* The bad site stays chaotic, but still fits on a phone */
+  .bad-site .hero h1 { max-width: 6em; }
+  .bad-site .hero p { width: 70%; margin-left: 20%; }
+  .bad-site .course-card:nth-child(n) { width: 92%; margin-left: 2%; }
+  .bad-site .course-card:nth-child(2) { margin-left: 8%; }
+  .bad-site .contact { margin-left: 4%; }
+  .bad-site .contact p { width: 60%; }
+  .bad-site .contact .btn { margin-left: 50%; }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bad Design | Nexora Learning Academy</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+
+<body data-page="bad">
+
+  <!-- ============ Comparison bar (same on every page) ============ -->
+  <header class="compare-bar">
+    <div class="compare-bar__inner">
+      <a class="compare-bar__title" href="index.html" data-transition>Good Design vs Bad Design</a>
+
+      <nav class="compare-bar__nav" aria-label="Choose a design">
+        <a class="view-btn view-btn--good" href="good.html" data-transition>🟢 View Good Design</a>
+        <a class="view-btn view-btn--bad is-active" href="bad.html" aria-current="page">🔴 View Bad Design</a>
+      </nav>
+
+      <div class="compare-bar__status">
+        <span class="status-pill status-pill--bad">Now viewing: Bad Design</span>
+        <a class="bar-btn" href="good.html" data-transition>Switch Design</a>
+        <a class="bar-btn" href="index.html" data-transition>Back to Comparison</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================
+       NEXORA LEARNING ACADEMY
+       The markup below is IDENTICAL in good.html and bad.html.
+       Only the wrapper class (good-site / bad-site) is different.
+       Capital letters you see are CSS (text-transform), not different text.
+       =================================================================== -->
+  <div class="bad-site">
+
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="container">
+          <h1>Learn Today. Lead Tomorrow.</h1>
+          <p>Build practical skills, explore new ideas, and prepare yourself for the opportunities of tomorrow.</p>
+          <a class="btn" href="#courses">Explore Courses</a>
+        </div>
+      </section>
+
+      <section id="about" class="about">
+        <div class="container">
+          <h2>About Us</h2>
+          <p>Nexora Learning Academy helps students develop practical knowledge, digital skills, and confidence through accessible and engaging learning experiences.</p>
+        </div>
+      </section>
+
+      <section id="courses" class="courses">
+        <div class="container">
+          <h2>Our Popular Courses</h2>
+          <div class="course-grid">
+            <article class="course-card">
+              <h3>Web Development</h3>
+              <p>Learn HTML, CSS, and JavaScript to build modern websites.</p>
+            </article>
+            <article class="course-card">
+              <h3>Python Programming</h3>
+              <p>Develop problem-solving skills and create useful applications using Python.</p>
+            </article>
+            <article class="course-card">
+              <h3>Data Analytics</h3>
+              <p>Understand data and discover insights using spreadsheets, visualization, and analytical tools.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact">
+        <div class="container">
+          <h2>Get in Touch</h2>
+          <p>Have questions about our courses? We would love to hear from you.</p>
+          <a class="btn" href="#contact">Contact Us</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Nexora Learning Academy. All rights reserved.</p>
+    </footer>
+
+  </div>
+  <!-- ============ end of Nexora page ============ -->
+
+  <!-- Mistakes summary (this is demo material, not part of the Nexora page) -->
+  <aside class="principles" aria-labelledby="principles-title">
+    <div class="principles__box principles__box--bad">
+      <h2 id="principles-title">What Is Going Wrong Here?</h2>
+      <p>The words are identical to the good version. Only the CSS changed. Use “Switch Design” to compare.</p>
+      <ol>
+        <li><strong>Too many fonts.</strong> Five unrelated typefaces make the page look like a ransom note.</li>
+        <li><strong>Clashing colors.</strong> Red, neon green, yellow and purple compete for attention.</li>
+        <li><strong>Random text sizes.</strong> An 88px headline sits next to a 10px paragraph, so there is no hierarchy.</li>
+        <li><strong>Uneven spacing and alignment.</strong> Every section starts at a different position.</li>
+        <li><strong>Inconsistent buttons.</strong> Each button has a different shape, size, color and font.</li>
+        <li><strong>Poor contrast.</strong> Pale text on bright backgrounds is tiring and hard to read.</li>
+        <li><strong>Awkward wrapping and random capitals.</strong> The eye never knows where to go next.</li>
+      </ol>
+    </div>
+  </aside>
+
+</body>
+</html>
