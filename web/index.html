@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arman's World | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css"></head>
+<body class="welcome"><canvas id="c"></canvas>
+<main class="gate glass">
+ <h1>ARMAN'S WORLD</h1><p class="sub">An interactive 3D portfolio tour</p>
+ <p id="hello" class="type"></p>
+ <input id="name" maxlength="20" placeholder="Your name" autocomplete="off" aria-label="Your name">
+ <div class="row"><span>You are</span><button class="opt on" data-k="t" data-v="Mr">Mr</button><button class="opt" data-k="t" data-v="Ms">Ms</button></div>
+ <div class="row"><span>Guide</span><button class="opt on" data-k="g" data-v="m">Kuro · male</button><button class="opt" data-k="g" data-v="f">Hana · female</button></div>
+ <div class="row"><span>Language</span><select id="lang"><option value="en">English</option><option value="ta">தமிழ்</option><option value="kn">ಕನ್ನಡ</option><option value="ml">മലയാളം</option><option value="te">తెలుగు</option><option value="ja">日本語</option><option value="hi">हिन्दी</option></select></div>
+ <button id="go" class="big">Start the ride</button>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script src="js/robot.js"></script><script src="js/welcome.js"></script></body></html>
